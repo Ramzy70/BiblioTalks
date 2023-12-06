@@ -1,5 +1,132 @@
 .navbar {
-    height: 50px;
-    background-color: #3498DB;
+    height: 70px;
+    background-color: #262626;
     width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed ;
+    z-index: 2;
+}
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #3498DB ;
+    padding-left: 2%;
+    flex: 10%;
+}
+.logo h3 {
+    cursor: pointer;
+}
+.form {
+    display: flex;
+    gap: 0.5%;
+    height: 80%;
+    position: relative;
+    justify-content: center;
+    flex: 30%;
+}
+.searchBook {   
+    width: 100%;
+    min-width: max-content;
+    height: 95%;
+    font-size: 1.15rem;
+    background-color: transparent;
+    border: 1px solid #caced1;
+    border-radius: 0.25rem;
+    color: #ffffff;
+    cursor: text;
+    padding: 0 10% 0 5%;
+  }
+.searchBook:focus {
+    outline: none;
+}
+.searchIcon{
+    color: white;
+    position: absolute;
+    height: 80%;
+    top: 20%;
+    right: 2%;
+    cursor: pointer;
+}
+.list{
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    color: white;
+    justify-content: space-around;
+    flex: 30%;
+}
+#hidden {
+    display: flex;
+}
+#hiddenSearch {
+    display: flex;
+}
+.list li:hover {
+    color: #3498DB;
+    cursor: default;
+}
+.profile {
+    height: 80%;
+    flex: 10%;
+    display: flex;
+    justify-content: center;
+}
+.profile img {
+    min-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.showLinks {
+    color: transparent;
+}
+@media only screen and (max-width:850px) {
+    .showLinks {
+        display: block;
+        color: #3498DB;
+    }
+    .list{
+        display: none
+    }
+    .profile {
+        flex: 5%;
+        justify-content: end;
+        padding-right: 10%;
+    }
+    #hidden {
+        position: absolute;
+        left: 0;
+        top : 70px;
+        height: auto;
+        width: 50%;
+        background-color: #262626;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-top: 1px solid white;
+        border-right: 1px solid white;
+        z-index: 1;
+    }
+    #hidden li {
+        padding: 10px 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid white;
+    }
+    #hiddenSearch {
+        position: absolute;
+        left: 0;
+        top : 70px;
+        height: 50px;
+        width: 100%;
+        background-color: #262626;
+        border-top: 1px solid white;
+    }
+    #hiddenSearch .searchBook {
+        border: none;
+    }
+
 }

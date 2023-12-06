@@ -1,0 +1,61 @@
+
+
+.square{
+
+   width: 230px;
+   height: 340px;
+   background-color: white; 
+   align-items :center;
+   padding: 30px;
+   justify-content: center;
+   align-content: center;
+   display: flex;
+   flex-direction: column;
+
+}
+
+.bookComponents{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+    padding-top: 20px;
+}
+
+input[type=radio] {
+    display:none;
+}
+
+.star{
+    cursor: pointer;
+}
+
+.bookImg{
+  width: 191px;
+  height: 282px;
+  border-radius: 5px;
+  padding-bottom: 10px;
+}
+
+.bookName{
+    width: 46px;
+    height: 22px;
+    font-size: 20px;
+    line-height: 23.44px;
+}
+
+.bookAuthor{
+  width : 111px;
+  height: 18px;
+  font-size: 16px;
+  line-height: 18.75px;
+  color: rgba(0, 0, 0, 0.5);
+
+}
+
+.ratingStars{
+
+    width:105.5px;
+    height: 16.97px;
+}
