@@ -1,0 +1,56 @@
+.bookContainer {
+    margin-bottom: 50px;
+}
+.categorie{
+    width: 100%;
+    min-height: fit-content;
+    padding-left : 80px;
+    padding-right: 80px;
+    padding-top : 30px;
+    
+}
+
+.books{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    overflow-x: unset;
+    justify-content: space-between;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.title{
+    padding : 10px; 
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 37.5px;
+}
+
+.seeMore{
+    width: 150px;
+    height: 45px;
+    font-size: 18px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    background-color: #3498DB ;
+    
+}
+
+.seeMoreBtn{
+    display: flex;
+    justify-content: center;
+    
+    padding-top: 40px;
+    
+}
+
+
+
+
+
+
+
