@@ -21,7 +21,7 @@ const Navbar = () => {
                 Home
             </li>
             <li className="itemList">
-                Contact
+            <a href="#contact">Contact</a>
             </li>
             <li className="itemList">
                 Add a Book

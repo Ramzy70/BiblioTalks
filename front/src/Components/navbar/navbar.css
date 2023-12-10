@@ -7,6 +7,8 @@
     justify-content: space-between;
     position: fixed ;
     z-index: 2;
+    top: 0px;
+    left: 0px;
 }
 .logo {
     font-size: 25px;
@@ -58,6 +60,18 @@
     justify-content: space-around;
     flex: 30%;
 }
+.list .itemList {
+    cursor: pointer;
+}
+.list .itemList a{
+    text-decoration: none;
+    color: #fff;
+}
+.list .itemList a:hover{
+    text-decoration: none;
+    color: #3498DB;
+
+}
 #hidden {
     display: flex;
 }
@@ -66,7 +80,6 @@
 }
 .list li:hover {
     color: #3498DB;
-    cursor: default;
 }
 .profile {
     height: 80%;
