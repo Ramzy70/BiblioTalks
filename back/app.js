@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/UserRouter');
 const BookRouter = require('./routes/BookRouter');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -10,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://BiblioTalks:64GL9SM0M5TCAKe0@cluster0.rtmbajz.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://BiblioTalks:64GL9SM0M5TCAKe0@cluster0.rtmbajz.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  } );
 
 // Check for successful MongoDB connection
 mongoose.connection.on('connected', () => {
