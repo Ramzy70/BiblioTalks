@@ -20,10 +20,23 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  photo: {
-    type: String,
-    default: 'default.jpg', // You can customize the default photo
+  image: {
+    data: Buffer,
+    contentType: String,
   },
+
+  wishList: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
+  }],
+  alreadyRead: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
+  }],
+  haveBeenRead: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
+  }],
 });
 
 // Hash the password before saving to the database
@@ -49,7 +62,12 @@ userSchema.methods.comparePassword = function(candidatePassword, next) {
     next(null, isMatch);
   });
 };
-
+userSchema.pre('save', function(next) {
+  if (!this.wishList) {
+    this.wishList = [];
+  }
+  next();
+});
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

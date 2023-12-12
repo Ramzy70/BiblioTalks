@@ -87,21 +87,16 @@ exports.getBooksByCategory = async (req, res) => {
 
   // Controller for getting the average rating of a book by title
   exports.getAverageRating = async (req, res) => {
-    const { title } = req.params;
+    const { id } = req.params;
   
     try {
-      // Using findOne to find a book by its title
-      const book = await Book.findOne({ title: new RegExp('^' + title + '$', 'i') });
-      console.log('Route Parameters:', req.params);
-      
+      const book = await Book.findById(id);
+  
       if (!book) {
         return res.status(404).json({ error: 'Book not found' });
       }
   
-      // Rest of the controller logic...
-  
-      // Calculate average rating logic
-      const ratings = book.ratings || [];
+      const ratings = book.rating || [];
   
       if (ratings.length === 0) {
         return res.status(200).json({ averageRating: 0 });
@@ -113,6 +108,16 @@ exports.getBooksByCategory = async (req, res) => {
       res.status(200).json({ averageRating });
     } catch (error) {
       console.error('Error:', error);
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+  // Controller for deleting all books
+exports.deleteAllBooks = async (req, res) => {
+  try {
+    await Book.deleteMany({});
+    res.status(200).json({ message: 'All books deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all books:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

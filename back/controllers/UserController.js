@@ -2,7 +2,9 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('../utility/config');
-const authenticateMiddleware = require('../utility/auth');
+const blacklist = require('../utility/blacklist');
+
+const Book = require('../models/Book');
 
 // Controller for creating a new user
 exports.createUser = async (req, res) => {
@@ -62,6 +64,15 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.deleteAllUsers = async (req, res) => {
+  try {
+    await User.deleteMany({});
+    res.status(200).json({ message: 'All users deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 // Controller for getting all superusers
 exports.getSuperUsers = async (req, res) => {
     try {
@@ -98,34 +109,267 @@ exports.getSuperUsers = async (req, res) => {
   
       const newUser = new User({ username, email, password });
       await newUser.save();
+ 
   
-      res.json({ message: 'User registered successfully' });
     } catch (error) {
       console.error('Registration Error:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
   
+  
   // Login endpoint
   exports.loginUser = async (req, res) => {
     try {
-      const { username, password } = req.body;
-  
-      const user = await User.findOne({ username });
-      if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-  
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-  
-      const token = jwt.sign({ user: { id: user._id, username: user.username } }, config.secretKey);
-      res.json({ token });
+        const { username, password } = req.body;
+
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Generate JWT
+        const token = jwt.sign({ user: { id: user._id, username: user.username } }, config.secretKey);
+
+        // Include the token and redirect URL in the response
+        res.json({ token, redirectUrl: '/users/protected-data' });
+
     } catch (error) {
-      console.error('Login Error:', error);
+        console.error('Login Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+exports.logoutUser = (req, res) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+
+  if (token) {
+    // Add the token to the blacklist
+    blacklist.add(token);
+    res.json({ message: 'Logout successful' });
+  } else {
+    res.status(401).json({ error: 'No token provided' });
+  }
+};
+exports.addToWishlist = async (req, res) => {
+  const userId = req.user.id; // Extract user ID from the authenticated user
+  const bookId = req.params.bookId; // Assuming you have bookId as a parameter in your route
+
+  try {
+    // Find the user
+    const user = await User.findById(userId).populate('wishList');
+    console.log('User:', user);
+
+    // Find the book
+    const book = await Book.findById(bookId);
+    console.log(req.user.id)
+    // Check if both user and book exist
+    if (!user || !book) {
+      return res.status(404).json({ error: 'User or book not found' });
+    }
+
+    // Check if the book is already in the wishlist
+    if (user.wishList.includes(bookId)) {
+      return res.status(400).json({ error: 'Book already in wishlist' });
+    }
+
+    // Add the book to the wishlist
+    user.wishList.push(bookId);
+
+    // Save the user
+    await user.save();
+
+    res.status(200).json({ message: 'Book added to wishlist successfully' });
+  } catch (error) {
+    console.error('Error adding to wishlist:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+    
+  // Controller for removing a book from the user's wishlist
+  exports.removeFromWishlist = async (req, res) => {
+    const userId = req.user.id;
+    const bookId = req.params.bookId;
+  
+    try {
+      // Find the user
+      const user = await User.findById(userId);
+  
+      // Check if the user exists
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Check if the book is in the wishlist
+      const index = user.wishList.indexOf(bookId);
+      if (index === -1) {
+        return res.status(400).json({ error: 'Book not found in wishlist' });
+      }
+  
+      // Remove the book from the wishlist
+      user.wishList.splice(index, 1);
+  
+      // Save the user
+      await user.save();
+  
+      res.status(200).json({ message: 'Book removed from wishlist successfully' });
+    } catch (error) {
+      console.error('Error removing from wishlist:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+  exports.addToAlreadyRead = async (req, res) => {
+    const userId = req.user.id;
+    const bookId = req.params.bookId;
+  
+    try {
+      const user = await User.findById(userId);
+      const book = await Book.findById(bookId);
+  
+      if (!user || !book) {
+        return res.status(404).json({ error: 'User or book not found' });
+      }
+  
+      if (user.alreadyRead.includes(bookId)) {
+        return res.status(400).json({ error: 'Book already in Already Read list' });
+      }
+  
+      user.alreadyRead.push(bookId);
+      await user.save();
+  
+      res.status(200).json({ message: 'Book added to Already Read list successfully' });
+    } catch (error) {
+      console.error('Error adding to Already Read list:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
   
+  // Controller for adding a book to the "Have Been Read" list
+  exports.addToHaveBeenRead = async (req, res) => {
+    const userId = req.user.id;
+    const bookId = req.params.bookId;
+  
+    try {
+      const user = await User.findById(userId);
+      const book = await Book.findById(bookId);
+  
+      if (!user || !book) {
+        return res.status(404).json({ error: 'User or book not found' });
+      }
+  
+      if (user.haveBeenRead.includes(bookId)) {
+        return res.status(400).json({ error: 'Book already in Have Been Read list' });
+      }
+  
+      user.haveBeenRead.push(bookId);
+      await user.save();
+  
+      res.status(200).json({ message: 'Book added to Have Been Read list successfully' });
+    } catch (error) {
+      console.error('Error adding to Have Been Read list:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+  exports.removeFromAlreadyRead = async (req, res) => {
+    const userId = req.user.id;
+    const bookId = req.params.bookId;
+  
+    try {
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Check if the book is in the Already Read list
+      if (!user.alreadyRead.includes(bookId)) {
+        return res.status(400).json({ error: 'Book not in Already Read list' });
+      }
+  
+      // Remove the book from the Already Read list
+      user.alreadyRead = user.alreadyRead.filter((id) => id.toString() !== bookId);
+      await user.save();
+  
+      res.status(200).json({ message: 'Book removed from Already Read list successfully' });
+    } catch (error) {
+      console.error('Error removing from Already Read list:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+  
+  // Controller for removing a book from the "Have Been Read" list
+  exports.removeFromHaveBeenRead = async (req, res) => {
+    const userId = req.user.id;
+    const bookId = req.params.bookId;
+  
+    try {
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Check if the book is in the Have Been Read list
+      if (!user.haveBeenRead.includes(bookId)) {
+        return res.status(400).json({ error: 'Book not in Have Been Read list' });
+      }
+  
+      // Remove the book from the Have Been Read list
+      user.haveBeenRead = user.haveBeenRead.filter((id) => id.toString() !== bookId);
+      await user.save();
+  
+      res.status(200).json({ message: 'Book removed from Have Been Read list successfully' });
+    } catch (error) {
+      console.error('Error removing from Have Been Read list:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+// Controller for adding a rating and comment to a book
+exports.addRatingAndComment = async (req, res) => {
+  const userId = req.user.id; // Assuming you have user ID in the authenticated request
+  const bookId = req.params.bookId; // Assuming you have book ID as a parameter in your route
+  const { rating, comment } = req.body;
+
+  try {
+    // Find the user
+    const user = await User.findById(userId);
+
+    // Find the book
+    const book = await Book.findById(bookId);
+
+    // Check if both user and book exist
+    if (!user || !book) {
+      return res.status(404).json({ error: 'User or book not found' });
+    }
+
+    // Check if the user has already rated the book
+    const existingReview = book.reviews.find(review => review.user.equals(userId));
+
+    if (existingReview) {
+      return res.status(400).json({ error: 'User has already rated the book' });
+    }
+
+    // Add the new rating and comment to the book's reviews
+    book.reviews.push({
+      user: userId,
+      ratings: [rating],
+      comments: [comment],
+    });
+  
+    // Save the book
+    await book.save();
+
+
+    res.status(200).json({ message: 'Rating and comment added successfully' });
+  } catch (error) {
+    console.error('Error adding rating and comment:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

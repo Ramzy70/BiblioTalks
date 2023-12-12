@@ -15,11 +15,23 @@ const bookSchema = new mongoose.Schema({
   category: {
     type: String,
   },
+  reviews: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to the User model
+    },
+    comments: [{
+      type: String,
+    }],
+    ratings: [{
+      type: Number,
+    }],
+  }],
   cover: {
-    type: String, // Assuming you store the cover image URL
+    type: String,
   },
   rating: {
-    type: [Number], // Assume ratings is an array of numbers
+    type: [Number],
     default: [],
   },
 });
