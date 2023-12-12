@@ -1,38 +1,56 @@
 const Book = require('../models/Book');
+const upload = require('../utility/multerConfig');
 
 // Controller for creating a new book
 exports.createBook = async (req, res) => {
   try {
-    const newBook = await Book.create(req.body);
-    res.status(201).json(newBook);
+    // Access JSON data from req.body
+    const { title, author, description, category } = req.body;
+
+    // Access file details from req.file
+    const coverImagePath = req.file.path;
+
+    // Create a new book with both JSON data and file details
+    const newBook = new Book({
+      title,
+      author,
+      description,
+      category,
+      cover: coverImagePath,
+      status: 'approved', 
+    });
+
+    // Save the book to the database
+    await newBook.save();
+
+    res.status(201).json({ message: 'Book created successfully', book: newBook });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error creating book:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 // Controller for getting all books
 exports.getAllBooks = async (req, res) => {
   try {
-    const books = await Book.find();
-    res.status(200).json(books);
+    const approvedBooks = await Book.find({ status: 'approved' });
+    res.status(200).json(approvedBooks);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Controller for getting a specific book by ID
+// Controller for getting a specific approved book by ID
 exports.getBookById = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findOne({ _id: req.params.id, status: 'approved' });
     if (!book) {
-      return res.status(404).json({ error: 'Book not found' });
+      return res.status(404).json({ error: 'Book not found or not approved' });
     }
     res.status(200).json(book);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 // Controller for updating a book by ID
 exports.updateBook = async (req, res) => {
   try {

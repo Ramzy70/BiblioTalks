@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const config = require('./config');
 const blacklist = require('./blacklist');
 
+
+
 function authenticateMiddleware(req, res, next) {
   const token = req.header('Authorization')?.split(' ')[1];
 
@@ -16,7 +18,7 @@ function authenticateMiddleware(req, res, next) {
     }
 
     const decoded = jwt.verify(token, config.secretKey);
-    req.user = decoded.user;
+    req.user = { ...decoded.user, isSuperUser: decoded.user.isSuperUser }; // Add isSuperUser field
     next();
   } catch (error) {
     console.error('Error verifying token:', error.message);
@@ -24,4 +26,14 @@ function authenticateMiddleware(req, res, next) {
   }
 }
 
-module.exports = authenticateMiddleware;
+const authAdminMiddleware = (req, res, next) => {
+  const user = req.user;
+console.log(user);
+  if (!user || !user.isSuperUser) {
+    return res.status(403).json({ error: 'Forbidden - Admin access required' });
+  }
+
+  next();
+};
+
+module.exports = { authenticateMiddleware, authAdminMiddleware };
