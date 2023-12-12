@@ -62,6 +62,7 @@
 }
 .list .itemList {
     cursor: pointer;
+    position: relative;
 }
 .list .itemList a{
     text-decoration: none;
@@ -70,8 +71,58 @@
 .list .itemList a:hover{
     text-decoration: none;
     color: #3498DB;
-
 }
+.list .itemList:last-child:hover {
+    cursor: pointer;
+    color: #fff;
+}
+.list .itemList:last-child ul {
+    margin: 0;
+    padding: 0;
+    display: none;
+    position: absolute;
+    z-index: 88;
+    left: 0; /* Center the list horizontally */
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    list-style: none;
+    max-height: 200px; 
+    min-width: 100px;
+    overflow-y: auto;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    scrollbar-width: thin; /* Adjust the width of the scrollbar for Firefox */
+    scrollbar-color: #ffffff #ffffff;
+    right: 0;
+  left: auto;
+  box-sizing: border-box;
+  margin-right: -10%;
+}
+.list .itemList:last-child ul li:last-child {
+    border-bottom: 1px solid white;
+}
+.list .itemList:last-child ul::-webkit-scrollbar {
+    width: 6px; /* Adjust the width of the scrollbar for Webkit browsers */
+}
+  
+.list .itemList:last-child ul::-webkit-scrollbar-thumb {
+    background-color: #ffffff; /* Adjust the color of the scrollbar thumb for Webkit browsers */
+}
+.list .itemList:last-child ul li {
+    background-color: #262626;
+    padding: 10px 10px;
+    width: 100px;
+    border: 1px solid white;
+    border-bottom: none;
+    align-self: center;
+    box-sizing: border-box;
+}
+  
+.list .itemList:last-child:hover ul {
+    display: flex;
+    flex-direction: column;
+}
+
 #hidden {
     display: flex;
 }
@@ -93,13 +144,51 @@
     border-radius: 50%;
     object-fit: cover;
 }
-.showLinks {
-    color: transparent;
+.profileList {
+    position: absolute;
+    top: 70px;
+    right: 0px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-@media only screen and (max-width:850px) {
+.profileList li {
+    cursor: pointer;
+    height: auto;
+    padding: 10px 0;
+    width: 200px;
+    text-align: center;
+    background-color: #262626;
+    z-index: 1;
+    border-bottom: 1px solid white;
+}
+.profileList li a {
+    color: white;
+}
+.profileList li form button {
+    color: white;
+    background-color: transparent;
+    border: none;
+}
+#hiddens {
+    display: none;
+}
+.showLinks {
+    pointer-events: none;
+}
+@media only screen and (max-width:900px) {
+    .list .itemList:last-child ul {
+        margin-right: 20%;
+
+    }
     .showLinks {
-        display: block;
         color: #3498DB;
+        pointer-events: initial;
     }
     .list{
         display: none
@@ -123,7 +212,7 @@
         border-right: 1px solid white;
         z-index: 1;
     }
-    #hidden li {
+    #hidden > li {
         padding: 10px 0;
         width: 100%;
         text-align: center;

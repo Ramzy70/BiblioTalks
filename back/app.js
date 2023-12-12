@@ -5,7 +5,9 @@ const userRouter = require('./routes/UserRouter');
 const BookRouter = require('./routes/BookRouter');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+var cors = require('cors')
+app.use(cors())
 
 // Middleware
 app.use(bodyParser.json());
@@ -26,9 +28,11 @@ mongoose.connection.on('error', (err) => {
 app.use('/users', userRouter);
 app.use('/books', BookRouter);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
+
+
 
 // Start server
-app.listen(PORT, () => {
+app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

@@ -34,14 +34,14 @@
   color: white;
 }
 
-.loginBoxq{
-    height: 80%;
+.loginBox{
+    height: 100%;
     padding: 20px;
     background-color: #344d5d;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
 .loginInput{
@@ -50,6 +50,7 @@
     border: 1px solid gray;
     font-size: 18px;
     padding-left: 20px;
+    margin-bottom: 10%;
 }
 
 .loginInput:focus{
@@ -58,40 +59,19 @@
 
 .loginButton{
     height: 50px;
-    width: 50%;
-    align-self: center;
     border-radius: 10px;
     border: none;
     background-color: #262626;
     color: white;
     font-size: 20px;
+    font-weight: 500;
     margin-bottom: 7%;
-    font-weight: 500;
     cursor: pointer;
 }
-.loginButton:disabled {
-  cursor: not-allowed;
-}
 
-
-.loginRegisterButton{
-    width: 60%;
+.loginForgot{
     text-align: center;
-    align-self: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    border-radius: 10px;
-    border: 2px solid white;
-    background-color: #344d5d;
     color: white;
-    font-size: 20px;
-    font-weight: 500;
+    margin-bottom: 6%;
     cursor: pointer;
-}
-
-.loginRegisterButton:hover {
-  text-decoration: none;
-  color: white;
 }

@@ -64,6 +64,8 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Controller for deleting all
 exports.deleteAllUsers = async (req, res) => {
   try {
     await User.deleteMany({});
@@ -73,6 +75,7 @@ exports.deleteAllUsers = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 // Controller for getting all superusers
 exports.getSuperUsers = async (req, res) => {
     try {
@@ -98,32 +101,35 @@ exports.getSuperUsers = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
-  exports.registerUser = async (req, res) => {
-    try {
-      const { username, email, password } = req.body;
-  
-      const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-      if (existingUser) {
-        return res.status(400).json({ error: 'User already exists' });
+
+    // Controller for registring a new user
+    exports.registerUser = async (req, res) => {
+      try {
+        const { username, email, password } = req.body;
+    
+        const existingUser = await User.findOne({  email  });
+        if (existingUser) {
+          return res.status(400).json({ error: 'User already exists' });
+        }
+    
+        const newUser = new User({ username, email, password });
+        await newUser.save();
+    
+        // Send a response back to the client
+        res.status(201).json({ message: 'User registered successfully', user: newUser });
+      } catch (error) {
+        console.error('Registration Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
       }
-  
-      const newUser = new User({ username, email, password });
-      await newUser.save();
- 
-  
-    } catch (error) {
-      console.error('Registration Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  };
+    };
   
   
   // Login endpoint
   exports.loginUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
-        const user = await User.findOne({ username });
+        const user = await User.findOne({email: email });
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -134,10 +140,10 @@ exports.getSuperUsers = async (req, res) => {
         }
 
         // Generate JWT
-        const token = jwt.sign({ user: { id: user._id, username: user.username } }, config.secretKey);
+        const token = jwt.sign({ user: { id: user._id, email: user.email } }, config.secretKey);
 
         // Include the token and redirect URL in the response
-        res.json({ token, redirectUrl: '/users/protected-data' });
+        res.status(200).json({ token,user, redirectUrl: '/users/protected-data' });
 
     } catch (error) {
         console.error('Login Error:', error);
@@ -157,6 +163,7 @@ exports.logoutUser = (req, res) => {
     res.status(401).json({ error: 'No token provided' });
   }
 };
+
 exports.addToWishlist = async (req, res) => {
   const userId = req.user.id; // Extract user ID from the authenticated user
   const bookId = req.params.bookId; // Assuming you have bookId as a parameter in your route
