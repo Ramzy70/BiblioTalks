@@ -7,7 +7,7 @@ const upload = require('../utility/multerConfig');
 // Routes
 router.get('/',authenticateMiddleware, BookController.getAllBooks);
 router.get('/:id',authenticateMiddleware, BookController.getBookById);
-router.put('/update/:id',[authenticateMiddleware, authAdminMiddleware], BookController.updateBook);
+router.put('/update/:id', [authenticateMiddleware, authAdminMiddleware], upload.single('cover'), BookController.updateBook);
 router.delete('/delete/:id', [authenticateMiddleware, authAdminMiddleware],BookController.deleteBook);
 router.delete('/delete', [authenticateMiddleware, authAdminMiddleware],BookController.deleteAllBooks);
 

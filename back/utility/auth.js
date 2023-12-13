@@ -21,7 +21,7 @@ function authenticateMiddleware(req, res, next) {
     req.user = { ...decoded.user, isSuperUser: decoded.user.isSuperUser }; // Add isSuperUser field
     next();
   } catch (error) {
-    console.error('Error verifying token:', error.message);
+    console.error('Error verifying token:', error.message); 
     return res.status(401).json({ error: 'Unauthorized - Invalid token' });
   }
 }

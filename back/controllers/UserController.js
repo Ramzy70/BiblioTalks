@@ -465,7 +465,12 @@ exports.uploadProfileImage = async (req, res) => {
 
 exports.submitBookRequest = async (req, res) => {
   try {
+    const allowedCategories = ['Science Fiction', 'Mystery', 'Romance', 'Thriller', 'Fantasy', 'Non-Fiction', 'Other'];
+
     const { title, author, description, category } = req.body;
+    if (!allowedCategories.includes(category)) {
+      return res.status(400).json({ error: 'Invalid category' });
+    }
 
     // Assuming you have Multer middleware configured and 'image' is the field name in the form data
     const coverImage = req.file.path; // This assumes Multer saves the file path in req.file.path
@@ -502,7 +507,7 @@ exports.approveOrRejectRequest = async (req, res) => {
   try {
     const { bookId } = req.params;
     const { action } = req.body; // 'approve' ou 'reject'
-
+    console.log(action)
     if (!['approve', 'reject'].includes(action)) {
       return res.status(400).json({ error: 'Invalid action' });
     }
@@ -520,3 +525,4 @@ exports.approveOrRejectRequest = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+ 

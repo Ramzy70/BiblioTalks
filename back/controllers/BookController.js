@@ -1,26 +1,32 @@
 const Book = require('../models/Book');
 const upload = require('../utility/multerConfig');
+const path = require('path');
+const fs = require('fs');
 
 // Controller for creating a new book
+
 exports.createBook = async (req, res) => {
   try {
-    // Access JSON data from req.body
+    const allowedCategories = ['Science Fiction', 'Mystery', 'Romance', 'Thriller', 'Fantasy', 'Non-Fiction', 'Other'];
+
     const { title, author, description, category } = req.body;
 
-    // Access file details from req.file
+    // Vérifie si la catégorie est autorisée
+    if (!allowedCategories.includes(category)) {
+      return res.status(400).json({ error: 'Invalid category' });
+    }
+
     const coverImagePath = req.file.path;
 
-    // Create a new book with both JSON data and file details
     const newBook = new Book({
       title,
       author,
       description,
       category,
       cover: coverImagePath,
-      status: 'approved', 
+      status: 'approved',
     });
 
-    // Save the book to the database
     await newBook.save();
 
     res.status(201).json({ message: 'Book created successfully', book: newBook });
@@ -29,6 +35,7 @@ exports.createBook = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 // Controller for getting all books
 exports.getAllBooks = async (req, res) => {
   try {
@@ -43,6 +50,7 @@ exports.getAllBooks = async (req, res) => {
 exports.getBookById = async (req, res) => {
   try {
     const book = await Book.findOne({ _id: req.params.id, status: 'approved' });
+    
     if (!book) {
       return res.status(404).json({ error: 'Book not found or not approved' });
     }
@@ -54,16 +62,46 @@ exports.getBookById = async (req, res) => {
 // Controller for updating a book by ID
 exports.updateBook = async (req, res) => {
   try {
-    const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedBook) {
+    const bookId = req.params.id;
+    const updateData = req.body;
+
+    // Récupérer le livre existant de la base de données
+    const existingBook = await Book.findById(bookId);
+
+    if (!existingBook) {
       return res.status(404).json({ error: 'Book not found' });
     }
+
+    // Vérifier si la mise à jour concerne la couverture
+    if (req.file) {
+      // Si une nouvelle couverture est fournie, mettre à jour le chemin de la couverture
+      updateData.cover = req.file.path;
+
+      // Si une ancienne couverture existe, supprimez-la du système de fichiers
+      if (existingBook.cover && existingBook.cover !== updateData.cover) {
+        try {
+          // Construisez le chemin complet du fichier de l'ancienne couverture
+          const oldCoverPath = path.join(__dirname, '..', existingBook.cover);
+
+          // Supprimez le fichier de l'ancienne couverture
+          fs.unlinkSync(oldCoverPath);
+
+          console.log('Old cover deleted successfully');
+        } catch (error) {
+          console.error('Error deleting old cover:', error);
+        }
+      }
+    }
+
+    // Mettez à jour le livre dans la base de données
+    const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, { new: true });
+
     res.status(200).json(updatedBook);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error updating book:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 // Controller for deleting a book by ID
 exports.deleteBook = async (req, res) => {
   try {
