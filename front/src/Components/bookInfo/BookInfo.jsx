@@ -1,12 +1,8 @@
 import React from 'react'
 import "./bookInfo.css"
-
 import {FaStar} from "react-icons/fa"
-import {useState} from 'react'
 
 const BookInfo = () => {
-    const [rating, setRating]=useState(null)
-    const[hover, setHover] = useState(null)
   return (
     <div className='bookInfo'>
       <div className="bookInfoRight">
@@ -18,30 +14,19 @@ const BookInfo = () => {
         through the crap to show us how to stop trying to be "positive" all the time so
         that we can truly become better, happier people</p>
         <div className="ratingStars">
-          {[...Array(5)].map((star,index)=>{
-            const currentRating =index+1;
-         return (
-          <label>
-          <input 
-          type="radio"
-          name="rating"
-          value={currentRating}
-          onClick={()=>setRating(currentRating)}
-          />
-        
-         <FaStar className ='star'
-          size={19}
-          color ={currentRating<= (hover || rating)  ? "#F8B84E" : "#909090" }
-          onMouseEnter={()=>setHover(currentRating)}
-          onMouseLeave={()=>setHover(null)}
-          
-          />
-         </label>
-
-         )
-          })}
-         
-        </div>
+        {[...Array(5)].map((_, index) => {
+          const currentRating = index + 1;
+          return (
+            <label key={currentRating}>
+              <FaStar
+                className="star"
+                size={19}
+                color={currentRating <= 4 ? "#F8B84E" : "#909090"}
+              />
+            </label>
+          );
+        })}
+      </div>
         <h5 className="generalRating bookBasicInfo"><span className='bold'>General Rating : </span> 4</h5>
         <h5 className="bookInfoAuthor bookBasicInfo"><span className='bold'>Author : </span>George Orwell</h5>
         <h5 className="bookInfoCategory bookBasicInfo"><span className='bold'>Category : </span>Detective, Love</h5>

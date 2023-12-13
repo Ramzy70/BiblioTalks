@@ -3,8 +3,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('../utility/config');
 const blacklist = require('../utility/blacklist');
+const upload = require('../utility/multerConfig');
 
 const Book = require('../models/Book');
+
 
 // Controller for creating a new user
 exports.createUser = async (req, res) => {
@@ -102,26 +104,25 @@ exports.getSuperUsers = async (req, res) => {
     }
   };
 
-    // Controller for registring a new user
-    exports.registerUser = async (req, res) => {
-      try {
-        const { username, email, password } = req.body;
-    
-        const existingUser = await User.findOne({  email  });
-        if (existingUser) {
-          return res.status(400).json({ error: 'User already exists' });
-        }
-    
-        const newUser = new User({ username, email, password });
-        await newUser.save();
-    
-        // Send a response back to the client
-        res.status(201).json({ message: 'User registered successfully', user: newUser });
-      } catch (error) {
-        console.error('Registration Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+  exports.registerUser = async (req, res) => {
+    try {
+      const { username, email, password   } = req.body;
+  
+      const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+      if (existingUser) {
+        return res.status(400).json({ error: 'User already exists' });
       }
-    };
+  
+      const newUser = new User({ username, email, password });
+      await newUser.save();
+  
+      // Send a response back to the client
+      res.status(201).json({ message: 'User registered successfully', user: newUser });
+    } catch (error) {
+      console.error('Registration Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
   
   
   // Login endpoint
@@ -138,9 +139,9 @@ exports.getSuperUsers = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-
+       
         // Generate JWT
-        const token = jwt.sign({ user: { id: user._id, email: user.email } }, config.secretKey);
+        const token = jwt.sign({ user: { id: user._id, email: user.email ,isSuperUser: user.isSuperUser } }, config.secretKey);
 
         // Include the token and redirect URL in the response
         res.status(200).json({ token,user, redirectUrl: '/users/protected-data' });
@@ -339,9 +340,12 @@ exports.addToWishlist = async (req, res) => {
     }
   };
 // Controller for adding a rating and comment to a book
+// Controller for adding a rating and comment to a book
 exports.addRatingAndComment = async (req, res) => {
-  const userId = req.user.id; // Assuming you have user ID in the authenticated request
-  const bookId = req.params.bookId; // Assuming you have book ID as a parameter in your route
+  const userId = req.user.id;
+  console.log(userId);    
+
+  const bookId = req.params.bookId;
   const { rating, comment } = req.body;
 
   try {
@@ -360,23 +364,164 @@ exports.addRatingAndComment = async (req, res) => {
     const existingReview = book.reviews.find(review => review.user.equals(userId));
 
     if (existingReview) {
-      return res.status(400).json({ error: 'User has already rated the book' });
+      // User has already rated the book, add a new comment to existing review
+      existingReview.comments.push(comment);
+      existingReview.rating = rating;
+    } else {
+      // User hasn't rated the book yet, add a new review with the comment and rating
+      book.reviews.push({
+        user: userId,
+        rating: rating,
+        comments: [comment],
+      });
     }
 
-    // Add the new rating and comment to the book's reviews
-    book.reviews.push({
-      user: userId,
-      ratings: [rating],
-      comments: [comment],
-    });
-  
     // Save the book
     await book.save();
 
-
-    res.status(200).json({ message: 'Rating and comment added successfully' });
+    res.status(200).json({ message: 'Rating and comment added successfully', book: book });
   } catch (error) {
     console.error('Error adding rating and comment:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+// controllers/UserController.js
+
+
+
+
+
+// Controller for getting the average rating of a book by title
+// controllers/UserController.js
+
+// Controller for getting the average rating of a book by title
+exports.getAverageRating = async (req, res) => {
+  const { bookId } = req.params;
+
+  try {
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    const ratings = book.reviews.map((review) => review.rating).filter((rating) => rating !== undefined);
+
+    if (ratings.length === 0) {
+      return res.status(200).json({ averageRating: 0 });
+    }
+
+    const sum = ratings.reduce((acc, rating) => acc + rating, 0);
+    const averageRating = sum / ratings.length;
+
+    res.status(200).json({ averageRating });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+// controllers/BookController.js
+
+// Controller for getting all comments of a book by ID
+exports.getAllComments = async (req, res) => {
+  const { bookId } = req.params;
+
+  try {
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    // Extract comments from all reviews
+    const allComments = book.reviews.reduce((acc, review) => {
+      return acc.concat(review.comments);
+    }, []);
+
+    res.status(200).json({ comments: allComments });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+exports.uploadProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const imageUrl = req.file.path;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: { 'profileImage': imageUrl } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ message: 'Profile image uploaded successfully', user: updatedUser });
+  } catch (error) {
+    console.error('Error handling profile image upload:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
+exports.submitBookRequest = async (req, res) => {
+  try {
+    const { title, author, description, category } = req.body;
+
+    // Assuming you have Multer middleware configured and 'image' is the field name in the form data
+    const coverImage = req.file.path; // This assumes Multer saves the file path in req.file.path
+
+    const newBook = new Book({
+      title,
+      author,
+      description,
+      category,
+      cover: coverImage,
+      status: 'pending',
+    });
+
+    await newBook.save();
+    res.status(201).json({ message: 'Book creation request submitted successfully' });
+  } catch (error) {
+    console.error('Error submitting book creation request:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.getPendingRequests = async (req, res) => {
+  try {
+    const pendingRequests = await Book.find({ status: 'pending' });
+
+    res.status(200).json({ pendingRequests });
+  } catch (error) {
+    console.error('Error fetching pending requests:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.approveOrRejectRequest = async (req, res) => {
+  try {
+    const { bookId } = req.params;
+    const { action } = req.body; // 'approve' ou 'reject'
+
+    if (!['approve', 'reject'].includes(action)) {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
+
+    const newStatus = action === 'approve' ? 'approved' : 'rejected';
+    const updatedBook = await Book.findByIdAndUpdate(bookId, { status: newStatus }, { new: true });
+
+    if (!updatedBook) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    res.status(200).json({ message: 'Request updated successfully', book: updatedBook });
+  } catch (error) {
+    console.error('Error updating request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

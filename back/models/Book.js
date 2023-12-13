@@ -23,16 +23,19 @@ const bookSchema = new mongoose.Schema({
     comments: [{
       type: String,
     }],
-    ratings: [{
+    rating: {
       type: Number,
-    }],
+      min: 1,
+      max: 5,
+    },
   }],
   cover: {
     type: String,
   },
-  rating: {
-    type: [Number],
-    default: [],
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
   },
 });
 

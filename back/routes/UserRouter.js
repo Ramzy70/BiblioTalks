@@ -1,19 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/UserController');
-const authenticateMiddleware = require('../utility/auth');
-router.get('/protected-data', authenticateMiddleware, (req, res) => {
-    res.json({ message: 'This is protected data', user: req.user });
-  });
-// Routes
-router.post('/', userController.createUser);
-router.get('/',authenticateMiddleware, userController.getAllUsers);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', userController.deleteUser);
-router.delete('/', userController.deleteAllUsers);
+const upload = require('../utility/multerConfig');
 
-router.get('/filter/superusers', userController.getSuperUsers);
-router.get('/search/:keyword', userController.searchUsers);
+const userController = require('../controllers/UserController');
+const { authenticateMiddleware, authAdminMiddleware }= require('../utility/auth');
+
+
+// Routes
+//router.post('/', userController.createUser);
+router.get('/',[authenticateMiddleware, authAdminMiddleware], userController.getAllUsers);
+router.put('/:id',authenticateMiddleware, userController.updateUser);
+router.delete('/:id',[authenticateMiddleware, authAdminMiddleware] ,userController.deleteUser);
+router.delete('/',[authenticateMiddleware, authAdminMiddleware], userController.deleteAllUsers);
+
+router.get('/filter/superusers', [authenticateMiddleware, authAdminMiddleware],userController.getSuperUsers);
+router.get('/search/:keyword', authenticateMiddleware,userController.searchUsers);
 router.post('/register', userController.registerUser);
 
 router.post('/wishlist/:bookId', authenticateMiddleware, userController.addToWishlist);
@@ -21,17 +22,29 @@ router.delete('/wishlist/:bookId', authenticateMiddleware, userController.remove
 router.post('/alreadyread/:bookId', authenticateMiddleware, userController.addToAlreadyRead);
 router.delete('/alreadyread/:bookId', authenticateMiddleware, userController.removeFromAlreadyRead);
 
-router.post('/havebeenread/:bookId', authenticateMiddleware, userController.addToHaveBeenRead);
-router.delete('/havebeenread/:bookId', authenticateMiddleware, userController.removeFromHaveBeenRead);
+router.post('/reading/:bookId', authenticateMiddleware, userController.addToHaveBeenRead);
+router.delete('/reading/:bookId', authenticateMiddleware, userController.removeFromHaveBeenRead);
 
 // Login endpoint
 router.post('/login', userController.loginUser);
 router.post('/logout',authenticateMiddleware, userController.logoutUser);
 router.post('/:bookId/rating-comment', authenticateMiddleware, userController.addRatingAndComment);
+router.get('/:bookId/average-rating',authenticateMiddleware, userController.getAverageRating);
+router.get('/:bookId/comments', authenticateMiddleware,userController.getAllComments);
+router.post('/upload', authenticateMiddleware, upload.single('image'), userController.uploadProfileImage);
 
+/* get all reviexs of a book , for a user to modify previous ratings ,*/
+router.post('/submit-request', authenticateMiddleware,upload.single('cover'), userController.submitBookRequest);
 
+// Route to get pending book creation requests (only accessible to admin users)
+router.get('/pending-requests',[authenticateMiddleware, authAdminMiddleware], userController.getPendingRequests);
+
+// Route to approve or reject a book creation request (only accessible to admin users)
+router.put('/approve-reject-request/:bookId', [authenticateMiddleware, authAdminMiddleware], userController.approveOrRejectRequest);
+
+module.exports = router;
 // Protected route
 
-router.get('/dyn/:id', userController.getUserById);
+router.get('/:id',authenticateMiddleware, userController.getUserById);
 
 module.exports = router;

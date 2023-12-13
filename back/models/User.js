@@ -20,10 +20,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
-    data: Buffer,
-    contentType: String,
+  profileImage: {
+    type: String,
   },
+
 
   wishList: [{
     type: mongoose.Schema.Types.ObjectId,

@@ -6,14 +6,13 @@ export default function bookContainer({title , category}) {
   return (
     <div className='bookContainer'>
 
-
         <div className="categorie">
             <h2 className="title">{title}</h2>
             <div className="books">
-                <Book/>
-                <Book/>
-                <Book/>
-                <Book/>
+                <Book key="1"/>
+                <Book key="2"/>
+                <Book key="3"/>
+                <Book key="4"/>
             </div>
             {category &&
                 <div className="seeMoreBtn">
