@@ -14,6 +14,10 @@ const bookSchema = new mongoose.Schema({
   },
   category: {
     type: String,
+    required: true,
+  default:'Mystery',
+    enum: ['Science Fiction', 'Mystery', 'Romance', 'Thriller', 'Fantasy', 'Non-Fiction', 'Other'],
+
   },
   reviews: [{
     user: {
