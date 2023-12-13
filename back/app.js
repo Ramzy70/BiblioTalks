@@ -10,10 +10,9 @@ const initializeRealtimeMessaging = require('./realtimeMessaging'); // Importer 
 const upload = require('./utility/multerConfig');
 
 const app = express();
-
 var cors = require('cors')
 app.use(cors())
-
+const PORT = process.env.PORT || 5000;
 const server = http.createServer(app); // Create an HTTP server
 
 // Middleware
@@ -43,9 +42,7 @@ app.use('/messages', messageRouter);
 
 const port = process.env.PORT || 5000;
 
-
-
 // Start server
-app.listen(port, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

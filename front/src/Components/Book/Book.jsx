@@ -4,14 +4,14 @@ import {FaStar} from "react-icons/fa"
 
 
 
-export default function Book() {
+export default function Book({title,author,rating}) {
   return (
     <>
     <div className="square">
       <div className="bookComponents">
         <img src="/Images/image2.jpg" alt="" className="bookImg"/>
-        <h2 className="bookName">1984</h2> 
-        <h3 className="bookAuthor">George Orwell</h3>
+        <h2 className="bookName">{title}</h2> 
+        <h3 className="bookAuthor">{author}</h3>
         <div className="ratingStars">
         {[...Array(5)].map((_, index) => {
           const currentRating = index + 1;
@@ -20,7 +20,7 @@ export default function Book() {
               <FaStar
                 className="star"
                 size={19}
-                color={currentRating <= 2 ? "#F8B84E" : "#909090"}
+                color={currentRating <= rating ? "#F8B84E" : "#909090"}
               />
             </label>
           );

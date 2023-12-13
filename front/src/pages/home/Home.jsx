@@ -14,11 +14,11 @@ const Home = () => {
         <h4>Rate, Discuss and Read !</h4>
         <a href="#contact">Learn More</a>
       </div>
-      <BookContainer title="Top rated"/>
-      <BookContainer title="Popular Now"/>
-      <BookContainer title="New"/>
-      <BookContainer title="Detective" category={true}/>
-      <BookContainer title="Love" category={true}/>
+      <BookContainer title="Top rated" orderType="top-rated"/>
+      <BookContainer title="Popular Now" orderType="popular"/>
+      <BookContainer title="New" orderType="new"/>
+      <BookContainer title="Mystery" category="Mystery"/>
+      <BookContainer title="Science Fiction" category="Science Fiction"/>
       <Footer/>
     </div>
   )

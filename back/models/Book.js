@@ -41,6 +41,12 @@ const bookSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+  language : {
+    type: String,
+  },
+  publishedDate : {
+    type: Date,
+  }
 });
 
 const Book = mongoose.model('Book', bookSchema);

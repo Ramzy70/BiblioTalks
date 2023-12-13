@@ -46,6 +46,43 @@ exports.getAllBooks = async (req, res) => {
   }
 };
 
+// Controller for getting top-rated books
+exports.getTopRatedBooks = async (req, res) => {
+  try {
+    const topRatedBooks = await Book.find({ status: 'approved' })
+      .sort({ 'reviews.rating': -1 }) // Sort in descending order based on average rating
+      .limit(5); // Adjust the limit as needed
+    res.status(200).json(topRatedBooks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Controller for getting popular books
+exports.getPopularBooks = async (req, res) => {
+  try {
+    const popularBooks = await Book.find({ status: 'approved' })
+      .sort({ 'reviews.length': -1 }) // Sort in descending order based on the number of reviews
+      .limit(5); // Adjust the limit as needed
+    res.status(200).json(popularBooks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Controller for getting new books
+exports.getNewBooks = async (req, res) => {
+  try {
+    const newBooks = await Book.find({ status: 'approved' })
+      .sort({ createdAt: -1 }) // Sort in descending order based on creation date
+      .limit(5); // Adjust the limit as needed
+    res.status(200).json(newBooks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 // Controller for getting a specific approved book by ID
 exports.getBookById = async (req, res) => {
   try {
@@ -64,7 +101,7 @@ exports.updateBook = async (req, res) => {
   try {
     const bookId = req.params.id;
     const updateData = req.body;
-
+    console.log(req.body)
     // Récupérer le livre existant de la base de données
     const existingBook = await Book.findById(bookId);
 
