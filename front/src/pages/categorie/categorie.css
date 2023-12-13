@@ -1,0 +1,43 @@
+.top-page{
+
+    display: flex;
+    
+    align-items: center;
+    
+    margin-left: 50px;
+    
+    
+
+}
+
+
+
+.top{
+
+    padding-right: 80px;
+
+}
+
+.head{
+
+    margin-top: 100px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.titre{
+
+    font-weight: 800;
+}
+
+.books-titre{
+    font-weight: 600;
+    padding-top: 50px;
+    padding-bottom: 10px;
+    margin-left: 70px;
+}
+
+.livechat-title{
+    font-weight: 600;
+}
