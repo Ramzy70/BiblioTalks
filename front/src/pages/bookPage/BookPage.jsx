@@ -49,9 +49,8 @@ const BookPage = () => {
       {!book ? <p>Loading...</p> : 
       <BookInfo book={book}/>
       }
-      <BookReview />
-      <BookContainer title="Similar"/>
-      <BookContainer title="Recommended  "/>
+      <BookReview key={1} />
+      <BookContainer title="Similar" category={book?.category}/>
       <Footer/>
     </div>
   )

@@ -5,7 +5,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {Link} from "react-router-dom"
 import {AuthContext} from "../../context/AuthContext"
 import axios from "axios"
-import {FiAlignRight,FiXCircle,FiChevronDown } from "react-icons/fi";
+import {FiChevronDown } from "react-icons/fi";
+import categories from "../../utility/categories.json"
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 
 const Navbar = () => {
@@ -14,6 +16,8 @@ const Navbar = () => {
     const [showSearch, setShowSearch] = useState(true)
     const [showProfile, setShowProfile] = useState(false)
     const  {user ,  isFetching, error, dispatch } = useContext(AuthContext)
+
+    const imgPath = process.env.REACT_APP_PUBLIC_FOLDER;
 
     const logoutCall = async (dispatch) => {
         const token = localStorage.getItem("token");
@@ -60,14 +64,13 @@ const Navbar = () => {
                 My Lists
             </li>
             <li className="itemList"> Category <FiChevronDown />
-			    <ul>
-					<li>Fiction</li>
-					<li>Horror</li>
-                    <li>Classic</li>
-                    <li>Crime</li>
-                    <li>Fantasy</li>
-                    <li>Children</li>
-			    </ul>
+            <ul>
+                {categories.map((category) => (
+                <li key={category.name}>
+                    <Link to={`/category/${category.name}`}>{category.name}</Link>
+                </li>
+                ))}
+            </ul>
 			</li>
         </ul>
         <form className='form' action="" id={showSearch ? "hiddenSearch" : ""}>             
@@ -75,7 +78,10 @@ const Navbar = () => {
                 <SearchIcon className="searchIcon"/>
         </form>
         <div className="profile">
-            <img src="/Images/image2.jpg" onClick={() => setShowProfile(!showProfile)} alt="" />
+            <img src={user.profileImage
+                ? imgPath + user.profileImage
+                : imgPath + "uploads/default-avatar.jpg"} 
+                 onClick={() => setShowProfile(!showProfile)} alt="" />
             <ul className="profileList" id={showProfile ? "" : "hiddens"}>
                 <li>
                     <Link to="/" style={{textDecoration:"none"}}>Profile Page</Link>

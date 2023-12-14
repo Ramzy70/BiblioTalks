@@ -21,5 +21,4 @@ router.get('/search/:keyword',authenticateMiddleware, BookController.searchBooks
 router.post('/create', authenticateMiddleware, upload.single('cover'), BookController.createBook);
 
 
-// Rating Routes
 module.exports = router;    

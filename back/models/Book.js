@@ -15,8 +15,8 @@ const bookSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-  default:'Mystery',
-    enum: ['Science Fiction', 'Mystery', 'Romance', 'Thriller', 'Fantasy', 'Non-Fiction', 'Other'],
+  default:'Other',
+    enum: ['Arts & Music','Biography','Business','Comics','Computer & Tech','Cooking','Crime','Drama','Education','Entertainment','Fiction','Health','History','Horror','Kids','Literature','Medical','Mystery','Religion','Romance','Science Fiction & Fantasy','Science & Math','Sports' , 'Romance', 'Travel','Thriller','Western', 'Other'],
 
   },
   reviews: [{

@@ -17,11 +17,11 @@ router.get('/filter/superusers', [authenticateMiddleware, authAdminMiddleware],u
 router.get('/search/:keyword', authenticateMiddleware,userController.searchUsers);
 router.post('/register', userController.registerUser);
 
+//lists
 router.post('/wishlist/:bookId', authenticateMiddleware, userController.addToWishlist);
 router.delete('/wishlist/:bookId', authenticateMiddleware, userController.removeFromWishlist);
 router.post('/alreadyread/:bookId', authenticateMiddleware, userController.addToAlreadyRead);
 router.delete('/alreadyread/:bookId', authenticateMiddleware, userController.removeFromAlreadyRead);
-
 router.post('/reading/:bookId', authenticateMiddleware, userController.addToHaveBeenRead);
 router.delete('/reading/:bookId', authenticateMiddleware, userController.removeFromHaveBeenRead);
 
@@ -33,7 +33,6 @@ router.get('/:bookId/average-rating',authenticateMiddleware, userController.getA
 router.get('/:bookId/comments', authenticateMiddleware,userController.getAllComments);
 router.post('/upload', authenticateMiddleware, upload.single('image'), userController.uploadProfileImage);
 
-/* get all reviexs of a book , for a user to modify previous ratings ,*/
 router.post('/submit-request', authenticateMiddleware,upload.single('cover'), userController.submitBookRequest);
 
 // Route to get pending book creation requests (only accessible to admin users)

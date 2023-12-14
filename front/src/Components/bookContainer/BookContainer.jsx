@@ -4,7 +4,7 @@ import Book from "../Book/Book.jsx"
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-export default function BookContainer({title , category , orderType}) {
+export default function BookContainer({title , category , orderType , pageCategory}) {
 
     const [books, setBooks] = useState([]);
     const token = localStorage.getItem('token');
@@ -34,24 +34,22 @@ export default function BookContainer({title , category , orderType}) {
         }
         const averageRatingsPromises = response.data.map(async (book) => {
             const averageRatingResponse = await axios.get(`http://localhost:5000/users/${book._id}/average-rating`, {
-                headers: {
-                  Authorization: `Bearer ${token}`, // Include the token in the request headers
-                },
-              });
-              const averageRating = averageRatingResponse.data.averageRating;
-
+              headers: {
+                Authorization: `Bearer ${token}`, // Include the token in the request headers
+              },
+            });
+            const averageRating = averageRatingResponse.data.averageRating;
               // Round the average rating to the nearest whole number
-              const roundedRating = Math.round(averageRating);
-    
-              return {
-                ...book,
-                averageRating: roundedRating,
-              };
-          });
+            const roundedRating = Math.round(averageRating);
+            return {
+              ...book,
+              averageRating: roundedRating,
+            };
+        });
         const booksWithRatings = await Promise.all(averageRatingsPromises);
         setBooks(booksWithRatings);
       } catch (error) {
-        console.error(`Error fetching ${orderType} books:`, error);
+        console.error(`Error fetching books:`, error);
       }
     };
 
@@ -66,23 +64,23 @@ export default function BookContainer({title , category , orderType}) {
             <h2 className="title">{title}</h2>
             <div className="books">
             {books.map((book) => (
-            <Link key={book._id} to={`/books/${book._id}`}>
+            <Link className='bookLink' key={book._id} to={`/books/${book._id}`}>
                 <Book
                     title={book.title}
                     author={book.author}
                     rating={book.averageRating}
+                    cover={book.cover}
                 />
             </Link>
             
             ))}
             </div>
-            {category &&
-                <div className="seeMoreBtn">
-                    <button className="seeMore">See More</button>
-                </div>        
+            {!pageCategory && category &&
+              <div className="seeMoreBtn">
+                <Link className="seeMore" to={`/category/${category}`}>See More</Link>
+              </div>     
             }
         </div>
-
 
     </div>
   )

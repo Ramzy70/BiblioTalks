@@ -3,10 +3,14 @@ import "./bookInfo.css"
 import {FaStar} from "react-icons/fa"
 
 const BookInfo = ({book}) => {
+  const imgPath = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className='bookInfo'>
       <div className="bookInfoRight">
-          <img src="/Images/image2.jpg" alt="" className="bookInfoImg"/>
+          <img src={book.cover
+          ? imgPath + book.cover
+          : imgPath + "uploads/default_book_cover.jpg"} 
+          alt=""  className="bookInfoImg"/>
       </div>
       <div className="bookInfoleft">
         <h1 className="bookInfoName">{book.title}</h1>

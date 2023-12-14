@@ -1,26 +1,22 @@
-
-
 .square{
-
-   width: 250px;
-   background-color: white; 
-   align-items :center;
-   padding: 30px;
-   justify-content: center;
-   align-content: center;
-   display: flex;
-   flex-direction: column;
-   margin: 0 20px;
-   box-shadow: 1px 1px 5px 6px rgba(0,0,0,0.1);
+  width: 250px;
+  background-color: white; 
+  align-items :center;
+  padding: 30px;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+  -webkit-box-shadow: 3px 3px 10px 6px rgba(0,0,0,0.45);
+  -moz-box-shadow: 3px 3px 10px 6px rgba(0,0,0,0.45);
+  box-shadow: 3px 3px 10px 6px rgba(0,0,0,0.45);
 }
 
 .square:hover {
-    background-color: lightblue;
-    color: black;
-    cursor: pointer;
-    background-color: rgba(230, 230, 230, 1);
-    ;
-  }
+  cursor: pointer;
+  background-color: rgba(230, 230, 230, 1);
+}
 
 .bookComponents{
     display: flex;
@@ -43,23 +39,17 @@ input[type=radio] {
   width: 191px;
   height: 282px;
   border-radius: 5px;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
+  object-fit: cover;
 }
 
 .bookName{
-    width: 46px;
-    height: 22px;
     font-size: 20px;
-    line-height: 23.44px;
 }
 
 .bookAuthor{
-  width : 111px;
-  height: 18px;
   font-size: 16px;
-  line-height: 18.75px;
   color: rgba(0, 0, 0, 0.5);
-
 }
 
 .ratingStars{

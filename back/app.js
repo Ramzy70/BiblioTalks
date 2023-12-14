@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const http = require('http');
-
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/UserRouter');
 const BookRouter = require('./routes/BookRouter');
 const messageRouter = require('./routes/ChatRouter'); 
 const initializeRealtimeMessaging = require('./realtimeMessaging'); // Importer le module de messagerie
 const upload = require('./utility/multerConfig');
+const path = require('path')
 
 const app = express();
 var cors = require('cors')
@@ -17,7 +17,7 @@ const server = http.createServer(app); // Create an HTTP server
 
 // Middleware
 app.use(bodyParser.json());
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname,"uploads")));
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://BiblioTalks:64GL9SM0M5TCAKe0@cluster0.rtmbajz.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true  } );

@@ -47,6 +47,7 @@
     border-radius: 10px;
     border: none;
     font-weight: bold;
+    min-width: fit-content;
 }
 .haveReadIt {
     background-color:  #262626;

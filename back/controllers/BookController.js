@@ -7,9 +7,9 @@ const fs = require('fs');
 
 exports.createBook = async (req, res) => {
   try {
-    const allowedCategories = ['Science Fiction', 'Mystery', 'Romance', 'Thriller', 'Fantasy', 'Non-Fiction', 'Other'];
+    const allowedCategories = ['Arts & Music','Biography','Business','Comics','Computer & Tech','Cooking','Crime','Drama','Education','Entertainment','Fiction','Health','History','Horror','Kids','Literature','Medical','Mystery','Religion','Romance','Science Fiction & Fantasy','Science & Math','Sports' , 'Romance', 'Travel','Thriller','Western', 'Other'];
 
-    const { title, author, description, category } = req.body;
+    const { title, author, description, category , language , publishedDate } = req.body;
 
     // Vérifie si la catégorie est autorisée
     if (!allowedCategories.includes(category)) {
@@ -23,6 +23,8 @@ exports.createBook = async (req, res) => {
       author,
       description,
       category,
+      language,
+      publishedDate,
       cover: coverImagePath,
       status: 'approved',
     });
