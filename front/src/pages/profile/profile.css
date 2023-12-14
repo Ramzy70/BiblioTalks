@@ -1,0 +1,39 @@
+.topPage{
+
+    margin-top: 140px;
+    margin-bottom: 80px;
+}
+
+
+.title{
+    margin-bottom: -30px;
+    padding-bottom:-20px;
+    padding-top:20px;
+    margin-left: 60px;
+    color: black;
+    font-weight: 800;
+
+}
+.seeMore{
+    width: 150px;
+    height: 45px;
+    font-size: 18px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    background-color: rgba(144, 144, 144, 1);
+    
+    margin-top: -40px;
+    
+    
+}
+
+.seeMoreBtn{
+    display: flex;
+    justify-content: center;
+    
+    
+    
+    
+}

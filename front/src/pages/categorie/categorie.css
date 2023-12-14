@@ -39,5 +39,22 @@
 }
 
 .livechat-title{
-    font-weight: 600;
+    font-weight:600;
 }
+.seeMore{
+    width: 150px;
+    height: 45px;
+    font-size: 18px;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    background-color: #3498DB ;
+    
+}
+
+
+.footer{
+    margin-top: 300px;
+}
+
