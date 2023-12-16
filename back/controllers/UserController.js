@@ -469,7 +469,7 @@ exports.submitBookRequest = async (req, res) => {
   try {
     const allowedCategories = ['Arts & Music','Biography','Business','Comics','Computer & Tech','Cooking','Crime','Drama','Education','Entertainment','Fiction','Health','History','Horror','Kids','Literature','Medical','Mystery','Religion','Romance','Science Fiction & Fantasy','Science & Math','Sports' , 'Romance', 'Travel','Thriller','Western', 'Other'];
 
-    const { title, author, description, category } = req.body;
+    const { title, author, description, category , language , publishedDate } = req.body;
     if (!allowedCategories.includes(category)) {
       return res.status(400).json({ error: 'Invalid category' });
     }
@@ -484,6 +484,8 @@ exports.submitBookRequest = async (req, res) => {
       category,
       cover: coverImage,
       status: 'pending',
+      language,
+      publishedDate,
     });
 
     await newBook.save();

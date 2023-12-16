@@ -53,7 +53,13 @@ export default function BookContainer({title , category , orderType , pageCatego
               averageRating: roundedRating,
             };
         });
-        const booksWithRatings = await Promise.all(averageRatingsPromises);
+        let booksWithRatings = await Promise.all(averageRatingsPromises);
+        if(orderType === "top-rated") {
+          booksWithRatings = booksWithRatings.sort((a, b) => {
+            // Sort in descending order based on averageRating
+            return b.averageRating - a.averageRating;
+          });
+        }
         setBooks(booksWithRatings);
       } catch (error) {
         console.error(`Error fetching books:`, error);

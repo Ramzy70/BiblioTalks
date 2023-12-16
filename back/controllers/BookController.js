@@ -71,8 +71,7 @@ exports.getBooksByLists = async (req, res ) => {
 exports.getTopRatedBooks = async (req, res) => {
   try {
     const topRatedBooks = await Book.find({ status: 'approved' })
-      .sort({ 'reviews.rating': -1 }) // Sort in descending order based on average rating
-      .limit(5); // Adjust the limit as needed
+      .limit(8);
     res.status(200).json(topRatedBooks);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -84,7 +83,7 @@ exports.getPopularBooks = async (req, res) => {
   try {
     const popularBooks = await Book.find({ status: 'approved' })
       .sort({ '__v': -1 }) // Sort in descending order based on the number of reviews
-      .limit(5); // Adjust the limit as needed
+      .limit(8); // Adjust the limit as needed
     res.status(200).json(popularBooks);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -96,7 +95,7 @@ exports.getNewBooks = async (req, res) => {
   try {
     const newBooks = await Book.find({ status: 'approved' })
       .sort({ publishedDate: -1 }) // Sort in descending order based on creation date
-      .limit(5); // Adjust the limit as needed
+      .limit(8); // Adjust the limit as needed
     res.status(200).json(newBooks);
   } catch (error) {
     res.status(500).json({ error: error.message });

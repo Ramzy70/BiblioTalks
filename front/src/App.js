@@ -8,6 +8,7 @@ import Register from './pages/register/Register'
 import Categorie from './pages/categorie/Categorie';
 import Profile from "./pages/profile/Profile";
 import Recherche from "./pages/recherche/Recherche";
+import AddBook from "./pages/addBook/AddBook";
 import { AuthContext } from "./context/AuthContext";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path='/profile/:profile' element={user ? <Profile/> : <Navigate  to="/"/> }/>
             <Route path='/category/:category' element={user ? <Categorie/> : <Navigate  to="/"/> }/>
             <Route path='/search/:keyboard' element={user ? <Recherche/> : <Navigate  to="/"/> }/>
+            <Route path='/addBook' element={user ? <AddBook/> : <Navigate  to="/"/> }/>
           </Routes>
       </Router>
   

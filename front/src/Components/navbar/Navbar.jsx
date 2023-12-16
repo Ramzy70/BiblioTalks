@@ -68,11 +68,13 @@ const Navbar = () => {
                 <a href="#contact">Contact</a>
             </li>
             <li className="itemList">
-                Add a Book
+                <Link to="/addBook" style={{textDecoration:"none"}}>
+                    Add a Book
+                </Link>
             </li>
-            <li className="itemList">
-                My Lists
-            </li>
+            {/* <li className="itemList">
+                admin
+            </li> */}
             <li className="itemList"> Category <FiChevronDown />
             <ul>
                 {categories.map((category) => (

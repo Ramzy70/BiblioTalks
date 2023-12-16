@@ -1,0 +1,59 @@
+.AddBook {
+    display: flex;
+    flex-direction: column;
+}
+.pageTitle {
+    margin: 140px 0 0 10%;
+    font-weight: bolder;
+}
+.addBookForm {
+    margin:50px 50px 50px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    width: 50%;
+    justify-content: space-between;
+    align-self: center;
+}
+.addBookForm label{
+    display: flex;
+    gap: 5%;
+    align-items: center;
+    font-weight: bold;
+    font-size:x-large;
+    justify-content: space-between;
+}
+.submitBtn {
+    font-style: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    background-color: #3498DB;
+    color: white;
+    width: fit-content;
+    align-self: center;
+}
+.bookInput {
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #909090;
+    font-size: 15px;
+    color: black;
+    width: 40%;
+}
+
+.fileInput {
+    cursor: pointer;
+}
+
+@media only screen and (max-width:1300px) {
+    .addBookForm {
+        width: 70%;
+    }
+}
+@media only screen and (max-width:1100px) {
+    .addBookForm {
+        width: 90%;
+    }
+}
