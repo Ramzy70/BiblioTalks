@@ -48,6 +48,25 @@ exports.getAllBooks = async (req, res) => {
   }
 };
 
+exports.getBooksByLists = async (req, res ) => {
+  const { bookIds } = req.query;
+  console.log('Received bookIds:', bookIds);
+
+  try {
+    // Convert each string in the array to a valid ObjectId
+    const objectIdArray = bookIds.map((id) => mongoose.Types.ObjectId(id));
+    console.log('Converted objectIdArray:', objectIdArray);
+
+    // Find books based on the converted ObjectId array
+    const books = await Book.find({ _id: { $in: objectIdArray } });
+
+    res.status(200).json(books);
+  } catch (error) {
+    console.error('Error fetching books by IDs:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 // Controller for getting top-rated books
 exports.getTopRatedBooks = async (req, res) => {
   try {
@@ -64,7 +83,7 @@ exports.getTopRatedBooks = async (req, res) => {
 exports.getPopularBooks = async (req, res) => {
   try {
     const popularBooks = await Book.find({ status: 'approved' })
-      .sort({ 'reviews.length': -1 }) // Sort in descending order based on the number of reviews
+      .sort({ '__v': -1 }) // Sort in descending order based on the number of reviews
       .limit(5); // Adjust the limit as needed
     res.status(200).json(popularBooks);
   } catch (error) {
@@ -76,7 +95,7 @@ exports.getPopularBooks = async (req, res) => {
 exports.getNewBooks = async (req, res) => {
   try {
     const newBooks = await Book.find({ status: 'approved' })
-      .sort({ createdAt: -1 }) // Sort in descending order based on creation date
+      .sort({ publishedDate: -1 }) // Sort in descending order based on creation date
       .limit(5); // Adjust the limit as needed
     res.status(200).json(newBooks);
   } catch (error) {
@@ -172,6 +191,7 @@ exports.getBooksByCategory = async (req, res) => {
           { title: { $regex: keyword, $options: 'i' } },
           { author: { $regex: keyword, $options: 'i' } },
           { description: { $regex: keyword, $options: 'i' } },
+          { category: { $regex: keyword, $options: 'i' } },
         ],
       });
       res.status(200).json(books);

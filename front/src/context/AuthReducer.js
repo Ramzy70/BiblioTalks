@@ -24,20 +24,20 @@ const AuthReducer = (state,action) => {
                 isFetching: false,
                 error:false
             }
-        case "FOLLOW":
+        case "WISHLIST":
             return{
                 ...state,
                 user:{
                     ...state.user,
-                    followings:[...state.user.followings,action.payload]
+                    wishList:[...state.user.wishList,action.payload]
                 }
             }
-        case "UNFOLLOW":
+        case "UNWISHLIST":
             return{
                 ...state,
                 user:{
                     ...state.user,
-                    followings:state.user.followings.filter(following=> following !== action.payload)
+                    wishList:state.user.wishList.filter(bookItem=> bookItem !== action.payload)
                 }
             }
         default:

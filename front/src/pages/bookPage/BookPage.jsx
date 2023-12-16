@@ -40,7 +40,8 @@ const BookPage = () => {
     };
 
     fetchBookDetails();
-  }, [bookId]);
+  }, [bookId,token]);
+
 
 
   return (
@@ -49,7 +50,9 @@ const BookPage = () => {
       {!book ? <p>Loading...</p> : 
       <BookInfo book={book}/>
       }
-      <BookReview key={1} />
+      {!book ? <p>Loading...</p> : 
+        <BookReview key={book._id} book={book}/>
+      }
       <BookContainer title="Similar" category={book?.category}/>
       <Footer/>
     </div>

@@ -16,7 +16,7 @@
     flex-wrap: nowrap;
     overflow-y: auto;
     overflow-x: unset;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding-top: 15px;
     padding-bottom: 40px;
 }

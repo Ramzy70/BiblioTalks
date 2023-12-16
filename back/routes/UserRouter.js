@@ -18,11 +18,11 @@ router.get('/search/:keyword', authenticateMiddleware,userController.searchUsers
 router.post('/register', userController.registerUser);
 
 //lists
-router.post('/wishlist/:bookId', authenticateMiddleware, userController.addToWishlist);
+router.post('/wishlist/:bookId', authenticateMiddleware, userController.addToWishlist); //plane to read
 router.delete('/wishlist/:bookId', authenticateMiddleware, userController.removeFromWishlist);
-router.post('/alreadyread/:bookId', authenticateMiddleware, userController.addToAlreadyRead);
+router.post('/alreadyread/:bookId', authenticateMiddleware, userController.addToAlreadyRead); // Completed
 router.delete('/alreadyread/:bookId', authenticateMiddleware, userController.removeFromAlreadyRead);
-router.post('/reading/:bookId', authenticateMiddleware, userController.addToHaveBeenRead);
+router.post('/reading/:bookId', authenticateMiddleware, userController.addToHaveBeenRead); //reading
 router.delete('/reading/:bookId', authenticateMiddleware, userController.removeFromHaveBeenRead);
 
 // Login endpoint

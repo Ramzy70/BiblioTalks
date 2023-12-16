@@ -4,7 +4,7 @@ import {FaStar} from "react-icons/fa"
 
 
 
-export default function Book({title,author,rating,cover}) {
+export default function Book({title,author,rating,cover, listPage}) {
 
   const imgPath = process.env.REACT_APP_PUBLIC_FOLDER;
 

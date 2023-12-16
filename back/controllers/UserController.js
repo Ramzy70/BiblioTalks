@@ -171,12 +171,10 @@ exports.addToWishlist = async (req, res) => {
 
   try {
     // Find the user
-    const user = await User.findById(userId).populate('wishList');
-    console.log('User:', user);
+    const user = await User.findById(userId);
 
     // Find the book
     const book = await Book.findById(bookId);
-    console.log(req.user.id)
     // Check if both user and book exist
     if (!user || !book) {
       return res.status(404).json({ error: 'User or book not found' });
@@ -340,13 +338,12 @@ exports.addToWishlist = async (req, res) => {
     }
   };
 // Controller for adding a rating and comment to a book
-// Controller for adding a rating and comment to a book
 exports.addRatingAndComment = async (req, res) => {
-  const userId = req.user.id;
-  console.log(userId);    
+  const userId = req.user.id; 
 
   const bookId = req.params.bookId;
   const { rating, comment } = req.body;
+  console.log(rating)
 
   try {
     // Find the user
@@ -470,7 +467,7 @@ exports.uploadProfileImage = async (req, res) => {
 
 exports.submitBookRequest = async (req, res) => {
   try {
-    const allowedCategories = ['Science Fiction', 'Mystery', 'Romance', 'Thriller', 'Fantasy', 'Non-Fiction', 'Other'];
+    const allowedCategories = ['Arts & Music','Biography','Business','Comics','Computer & Tech','Cooking','Crime','Drama','Education','Entertainment','Fiction','Health','History','Horror','Kids','Literature','Medical','Mystery','Religion','Romance','Science Fiction & Fantasy','Science & Math','Sports' , 'Romance', 'Travel','Thriller','Western', 'Other'];
 
     const { title, author, description, category } = req.body;
     if (!allowedCategories.includes(category)) {

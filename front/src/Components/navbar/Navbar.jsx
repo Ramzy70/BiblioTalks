@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react'
+import { useNavigate  } from 'react-router-dom';
 import './navbar.css'
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -7,7 +8,6 @@ import {AuthContext} from "../../context/AuthContext"
 import axios from "axios"
 import {FiChevronDown } from "react-icons/fi";
 import categories from "../../utility/categories.json"
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 
 const Navbar = () => {
@@ -15,7 +15,7 @@ const Navbar = () => {
     const [showLinks, setShowLinks] = useState(false)
     const [showSearch, setShowSearch] = useState(true)
     const [showProfile, setShowProfile] = useState(false)
-    const  {user ,  isFetching, error, dispatch } = useContext(AuthContext)
+    const  {user, dispatch } = useContext(AuthContext)
 
     const imgPath = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -42,6 +42,16 @@ const Navbar = () => {
         e.preventDefault()
         logoutCall(dispatch)
     }
+
+    const history = useNavigate ();
+    const [searchKeyword, setSearchKeyword] = useState('');
+
+    const handleSearch = (e) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+        if (searchKeyword) {
+          history(`/search/${searchKeyword}`);
+        }
+      };
 
   return (
     <div className='navbar'>
@@ -73,10 +83,24 @@ const Navbar = () => {
             </ul>
 			</li>
         </ul>
-        <form className='form' action="" id={showSearch ? "hiddenSearch" : ""}>             
-                <input className='searchBook' type="text" placeholder='Search for a Book...' />
-                <SearchIcon className="searchIcon"/>
+        <form
+            className="form"
+            action=""
+            id={showSearch ? 'hiddenSearch' : ''}
+            onSubmit={handleSearch} // Use onSubmit event for form submission
+        >
+            <input
+                className="searchBook"
+                type="text"
+                placeholder="Search for a Book by name, by category, by author ..."
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+            />
+            <button type="submit" style={{ textDecoration: 'none' }}>
+                <SearchIcon className="searchIcon" />
+            </button>
         </form>
+
         <div className="profile">
             <img src={user.profileImage
                 ? imgPath + user.profileImage
@@ -84,7 +108,7 @@ const Navbar = () => {
                  onClick={() => setShowProfile(!showProfile)} alt="" />
             <ul className="profileList" id={showProfile ? "" : "hiddens"}>
                 <li>
-                    <Link to="/" style={{textDecoration:"none"}}>Profile Page</Link>
+                    <Link to={`/profile/${user._id}`} style={{textDecoration:"none"}}>Profile Page</Link>
                 </li>
                 <li>
                     <form onSubmit={logoutClick}><button>Log Out</button></form>

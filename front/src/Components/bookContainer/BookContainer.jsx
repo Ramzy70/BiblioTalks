@@ -4,17 +4,19 @@ import Book from "../Book/Book.jsx"
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-export default function BookContainer({title , category , orderType , pageCategory}) {
+export default function BookContainer({title , category , orderType , pageCategory , list}) {
 
     const [books, setBooks] = useState([]);
     const token = localStorage.getItem('token');
 
   useEffect(() => {
     // Fetch books from the server when the component mounts
-    const fetchBooks = async () => {
-        let response
+    let fetchBooks
+    !list && ( fetchBooks = async () => {
+      let response
+
       try {
-        {!category 
+        {!category && orderType && !list
             ? 
              response = await axios.get(`http://localhost:5000/books/${orderType}`
             , {
@@ -23,15 +25,20 @@ export default function BookContainer({title , category , orderType , pageCatego
                 },
             }
             )
-            :
-             response = await axios.get(`http://localhost:5000/books/filter/category/${category}`
-            , {
+            : ( category && !list && !orderType ?
+              
+              response = await axios.get(`http://localhost:5000/books/filter/category/${category}`
+              , {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Include the token in the request headers
+                  Authorization: `Bearer ${token}`, // Include the token in the request headers
                 },
-            }
-            ); // Adjust the API endpoint as needed
+              }
+              ) // Adjust the API endpoint as needed
+              : 
+                console.log("")
+              )
         }
+
         const averageRatingsPromises = response.data.map(async (book) => {
             const averageRatingResponse = await axios.get(`http://localhost:5000/users/${book._id}/average-rating`, {
               headers: {
@@ -51,10 +58,49 @@ export default function BookContainer({title , category , orderType , pageCatego
       } catch (error) {
         console.error(`Error fetching books:`, error);
       }
-    };
+    });
 
-    fetchBooks();
-  }, [token , orderType , category  ]);   
+    let bookRequests
+    list && ( bookRequests = list.map(async (bookId) => {
+      try {
+        const qsd = await axios.get(`http://localhost:5000/books/${bookId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request headers
+          },
+        });
+    
+        return qsd.data;
+      } catch (error) {
+        console.error(`Error fetching book with ID ${bookId}:`, error);
+        return null; // Handle the error as needed
+      }
+    }))
+    async function fetchListBooks() {
+      try {
+        const bookss = await Promise.all(bookRequests);
+        const averageRatingsPromises = bookss.map(async (book) => {
+          const averageRatingResponse = await axios.get(`http://localhost:5000/users/${book._id}/average-rating`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the request headers
+            },
+          });
+          const averageRating = averageRatingResponse.data.averageRating;
+            // Round the average rating to the nearest whole number
+          const roundedRating = Math.round(averageRating);
+          return {
+            ...book,
+            averageRating: roundedRating,
+          };
+      });
+      const booksWithRatings = await Promise.all(averageRatingsPromises);
+      setBooks(booksWithRatings);
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      }
+    }
+    list && fetchListBooks();
+    !list && fetchBooks();
+  }, [token , orderType , category , list ]);   
   
 
   return (
@@ -70,12 +116,13 @@ export default function BookContainer({title , category , orderType , pageCatego
                     author={book.author}
                     rating={book.averageRating}
                     cover={book.cover}
+                    listPage={list && true}
                 />
             </Link>
             
             ))}
             </div>
-            {!pageCategory && category &&
+            {!pageCategory && category && !list &&
               <div className="seeMoreBtn">
                 <Link className="seeMore" to={`/category/${category}`}>See More</Link>
               </div>     

@@ -13,11 +13,11 @@ export const Logout = () => ({
     type:"LOGOUT",
     payload:null
 })
-export const Follow = (userId) => ({
-    type:"FOLLOW",
-    payload:userId
+export const Wishlist = (bookId) => ({
+    type:"WISHLIST",
+    payload:bookId
 })
-export const Unfollow = (userId) => ({
-    type:"UNFOLLOW",
-    payload:userId
+export const Unwishlist = (bookId) => ({
+    type:"UNWISHLIST",
+    payload:bookId
 })

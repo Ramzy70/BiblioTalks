@@ -1,9 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState , useContext } from 'react'
 import "./bookInfo.css"
+import {AuthContext} from "../../context/AuthContext"
 import {FaStar} from "react-icons/fa"
+import axios from 'axios';
+import {Add,Remove} from "@material-ui/icons"
 
 const BookInfo = ({book}) => {
+
   const imgPath = process.env.REACT_APP_PUBLIC_FOLDER;
+  const  {user , dispatch} = useContext(AuthContext)
+  const token = localStorage.getItem('token');
+
+  const [wishListed,setWishListed] = useState(user.wishList.includes(book._id))
+
+  useEffect(() => {
+    setWishListed(user.wishList.includes(book._id))
+  },[user,book])
+
+  const wishListHandler = async () => {
+    try {
+      if (wishListed) {
+        await axios.delete(`http://localhost:5000/users/wishlist/${book._id}`, {
+          headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the request headers
+          },
+        })
+        dispatch({type:"UNWISHLIST", payload: book._id})
+      } else if(!wishListed) {
+        await axios.post(`http://localhost:5000/users/wishlist/${book._id}`,{user}, { 
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request headers
+          },
+        })
+        dispatch({type:"WISHLIST", payload: book._id})
+      }
+      setWishListed(!wishListed)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className='bookInfo'>
       <div className="bookInfoRight">
@@ -35,9 +70,9 @@ const BookInfo = ({book}) => {
         <h5 className="bookInfolanguage bookBasicInfo"><span className='bold'>language : </span>{book?.language}</h5>
         <h5 className="bookInfoDate bookBasicInfo"><span className='bold'>Published : </span>{book?.publishedDate}</h5>
         <div className="myListButtons">
-            <button className="haveReadIt btnInfo">I have read it</button>
-            <button className="readingIt btnInfo">I am reading it</button>
-            <button className="wishlist btnInfo">Add to my wish list</button>
+            <button className="haveReadIt btnInfo" >I have read it <Add/></button>
+            <button className="readingIt btnInfo" >I am reading it <Add/></button>
+            <button className="wishlist btnInfo" onClick={wishListHandler}>Add to my wish list {wishListed ? <Remove/> :<Add/>}</button>
         </div>
       </div>
     </div>
