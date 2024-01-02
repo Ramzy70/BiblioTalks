@@ -17,31 +17,35 @@ const Category = () => {
   const [socket, setSocket] = useState(null);
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    if (!user || !category) {
-      console.log('User or category not available:', user, category);
-      return; // Do nothing if user or category is not available yet
-    }
+  // Inside Category component
+useEffect(() => {
+  if (!user || !category) {
+    console.log('User or category not available:', user, category);
+    return; // Do nothing if user or category is not available yet
+  }
 
-    const newSocket = io('http://localhost:5000');
+  const newSocket = io('http://localhost:5000');
 
-    newSocket.on('connect', () => {
-      console.log('Socket connected');
-      // Emit a 'login' event with the user ID after the socket is connected
-      newSocket.emit('login', user._id);
-      console.log('User logged in:', user);
-      // Join the category room after logging in
-      newSocket.emit('joinCategory', { userId: user._id, category: categoryName });
-      console.log(`User joined category: ${categoryName}`);
+  newSocket.on('connect', () => {
+    console.log('Socket connected');
+    // Emit a 'login' event with the user ID after the socket is connected
+    newSocket.emit('login', user._id);
+    console.log('User logged in:', user);
+    // Join the category room after logging in
+    newSocket.emit('joinCategory', { userId: user._id, category: categoryName }, (response) => {
+      console.log(`Server response after joinCategory: ${JSON.stringify(response)}`);
     });
+    console.log(`User joined category: ${categoryName}`);
+  });
 
-    setSocket(newSocket);
+  setSocket(newSocket);
 
-    return () => {
-      newSocket.disconnect();
-      console.log('Socket disconnected');
-    };
-  }, [user, categoryName, category]);
+  return () => {
+    newSocket.disconnect();
+    console.log('Socket disconnected');
+  };
+}, [user, categoryName, category]);
+
 
   return (
     <div>

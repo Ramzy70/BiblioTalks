@@ -54,24 +54,38 @@ io.on('connection', (socket) => {
   // Handle joinCategory event
   socket.on('joinCategory', (data) => {
     const { userId, category } = data;
-    console.log(`User ${userId} joined category: ${category}`);
+    console.log(`Received joinCategory request: User ${userId} trying to join category: ${category}`);
     socket.join(category);
+    console.log(`User ${userId} successfully joined category: ${category}`);
   });
 
   // Handle sendMessage event
-  socket.on('sendMessage', (message) => {
-    console.log(`Received message: ${message.text} from ${message.user} in category ${message.category}`);
-    
-    // Save the message to MongoDB or perform any other desired logic
-    // Here, we're using the user ID to send the message to the correct socket
-    const userSocket = userSockets[message.userId];
-    if (userSocket) {
-      userSocket.emit('receiveMessage', message);
-    }
-  
-    // Broadcast the message to all users in the category room
-    io.to(message.category).emit('receiveMessage', message);
-  });
+  // Handle sendMessage event
+  socket.on('sendMessage', async (message) => {
+  console.log(`Received message: ${message.text} from ${message.user} in category ${message.category}`);
+
+  // Save the message to MongoDB
+  try {
+    const newMessage = new ChatMessage({
+      user: message.user,
+      text: message.text,
+      category: message.category,
+    });
+    await newMessage.save();
+  } catch (error) {
+    console.error('Error saving message to the database:', error);
+  }
+
+  // Here, we're using the user ID to send the message to the correct socket
+  const userSocket = userSockets[message.userId];
+  if (userSocket) {
+    userSocket.emit('receiveMessage', message);
+  }
+
+  // Broadcast the message to all users in the category room
+  io.to(message.category).emit('receiveMessage', message);
+});
+
 
   // Handle disconnect event
   socket.on('disconnect', () => {
@@ -84,6 +98,22 @@ io.on('connection', (socket) => {
     if (userIdToRemove) {
       delete userSockets[userIdToRemove];
       console.log(`Removed socket association for user ${userIdToRemove}`);
+    }
+  });
+
+  // Handle requestMessageHistory event
+  // Handle requestMessageHistory event
+  socket.on('requestMessageHistory', async (category, callback) => {
+    console.log(`User requested message history for category: ${category}`);
+    try {
+      const messages = await ChatMessage.find({ category })
+        .sort({ timestamp: 'asc' })
+        .limit(10)
+        .exec();
+      callback(messages);
+    } catch (error) {
+      console.error('Error fetching message history:', error);
+      callback([]);
     }
   });
 });
