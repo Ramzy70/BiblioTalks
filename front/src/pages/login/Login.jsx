@@ -20,6 +20,7 @@ const loginCall = async (userCredentials,dispatch) => {
 }
 
 
+
   const email = useRef()
   const password = useRef()
   const  {/*user ,*/  isFetching/*, error*/, dispatch } = useContext(AuthContext)
@@ -40,7 +41,7 @@ const loginCall = async (userCredentials,dispatch) => {
         <div className="loginRight">
           <form className="loginBoxq" onSubmit={handleClick}>
             <input placeholder="Email" type="email" className="loginInput" ref={email} required/>
-            <input placeholder="Password" required type="password" minLength="8" className="loginInput" ref={password}/>
+            <input placeholder="Password" required type="password" minLength="6" className="loginInput" ref={password}/>
             <button className="loginButton" disabled={isFetching}>{ isFetching? <CircularProgress style={{color:"white"}} size="20px"/> : "Log In"}</button>
             <Link to="/register" className="loginRegisterButton">
               Create a new account

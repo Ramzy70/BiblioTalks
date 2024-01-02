@@ -9,6 +9,8 @@ import Categorie from './pages/categorie/Categorie';
 import Profile from "./pages/profile/Profile";
 import Recherche from "./pages/recherche/Recherche";
 import AddBook from "./pages/addBook/AddBook";
+import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
+import UpdateBook from "./pages/updateBook/UpdateBook";
 import { AuthContext } from "./context/AuthContext";
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
             <Route path='/category/:category' element={user ? <Categorie/> : <Navigate  to="/"/> }/>
             <Route path='/search/:keyboard' element={user ? <Recherche/> : <Navigate  to="/"/> }/>
             <Route path='/addBook' element={user ? <AddBook/> : <Navigate  to="/"/> }/>
+            <Route path='/adminDashboard' element={user && user.isSuperUser ? <AdminDashboard/> : <Navigate  to="/"/> }/>
+            <Route path='/updatebook/:bookId' element={user && user.isSuperUser ? <UpdateBook/> : <Navigate  to="/"/> }/>
           </Routes>
       </Router>
   

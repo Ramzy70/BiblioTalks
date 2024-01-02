@@ -72,9 +72,11 @@ const Navbar = () => {
                     Add a Book
                 </Link>
             </li>
-            {/* <li className="itemList">
-                admin
-            </li> */}
+            { user.isSuperUser && <li className="itemList">
+                <Link to="/adminDashboard" style={{textDecoration:"none"}}>
+                    Admin Dashboard
+                </Link>
+            </li> } 
             <li className="itemList"> Category <FiChevronDown />
             <ul>
                 {categories.map((category) => (
@@ -98,7 +100,7 @@ const Navbar = () => {
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <button type="submit" style={{ textDecoration: 'none' }}>
+            <button type="submit" style={{ backgroundColor: 'none' , border:'none'}}>
                 <SearchIcon className="searchIcon" />
             </button>
         </form>

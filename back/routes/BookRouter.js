@@ -10,6 +10,7 @@ router.get('/top-rated', authenticateMiddleware, BookController.getTopRatedBooks
 router.get('/popular', authenticateMiddleware, BookController.getPopularBooks);
 router.get('/new', authenticateMiddleware, BookController.getNewBooks);
 router.get('/:id',authenticateMiddleware, BookController.getBookById);
+router.get('/anybook/:id',[authenticateMiddleware, authAdminMiddleware], BookController.getAnyBookById);
 router.get('/bookList',authenticateMiddleware, BookController.getBooksByLists);
 router.put('/update/:id', [authenticateMiddleware, authAdminMiddleware], upload.single('cover'), BookController.updateBook);
 router.delete('/delete/:id', [authenticateMiddleware, authAdminMiddleware],BookController.deleteBook);

@@ -132,7 +132,7 @@ exports.getSuperUsers = async (req, res) => {
 
         const user = await User.findOne({email: email });
         if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: 'Email does not exist' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -151,7 +151,6 @@ exports.getSuperUsers = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 
 exports.logoutUser = (req, res) => {
   const token = req.header('Authorization')?.split(' ')[1];
@@ -343,7 +342,6 @@ exports.addRatingAndComment = async (req, res) => {
 
   const bookId = req.params.bookId;
   const { rating, comment } = req.body;
-  console.log(rating)
 
   try {
     // Find the user
@@ -382,14 +380,6 @@ exports.addRatingAndComment = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-// controllers/UserController.js
-
-
-
-
-
-// Controller for getting the average rating of a book by title
-// controllers/UserController.js
 
 // Controller for getting the average rating of a book by title
 exports.getAverageRating = async (req, res) => {
@@ -417,7 +407,6 @@ exports.getAverageRating = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-// controllers/BookController.js
 
 // Controller for getting all comments of a book by ID
 exports.getAllComments = async (req, res) => {
@@ -462,8 +451,6 @@ exports.uploadProfileImage = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-
 
 exports.submitBookRequest = async (req, res) => {
   try {
@@ -511,7 +498,6 @@ exports.approveOrRejectRequest = async (req, res) => {
   try {
     const { bookId } = req.params;
     const { action } = req.body; // 'approve' ou 'reject'
-    console.log(action)
     if (!['approve', 'reject'].includes(action)) {
       return res.status(400).json({ error: 'Invalid action' });
     }

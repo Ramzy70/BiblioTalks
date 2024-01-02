@@ -116,6 +116,18 @@ exports.getBookById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.getAnyBookById = async (req, res) => {
+  try {
+    const book = await Book.findOne({ _id: req.params.id});
+    
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found or not approved' });
+    }
+    res.status(200).json(book);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 // Controller for updating a book by ID
 exports.updateBook = async (req, res) => {
   try {
@@ -174,7 +186,7 @@ exports.deleteBook = async (req, res) => {
 exports.getBooksByCategory = async (req, res) => {
     try {
       const category = req.params.category;
-      const books = await Book.find({ category });
+      const books = await Book.find({ category , status: 'approved'});
       res.status(200).json(books);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -184,20 +196,26 @@ exports.getBooksByCategory = async (req, res) => {
   // Controller for searching books by keyword
   exports.searchBooks = async (req, res) => {
     try {
-      const keyword = req.params.keyword;
-      const books = await Book.find({
-        $or: [
-          { title: { $regex: keyword, $options: 'i' } },
-          { author: { $regex: keyword, $options: 'i' } },
-          { description: { $regex: keyword, $options: 'i' } },
-          { category: { $regex: keyword, $options: 'i' } },
-        ],
-      });
-      res.status(200).json(books);
+        const keyword = req.params.keyword;
+        const books = await Book.find({
+            $and: [
+                {
+                    $or: [
+                        { title: { $regex: keyword, $options: 'i' } },
+                        { author: { $regex: keyword, $options: 'i' } },
+                        { description: { $regex: keyword, $options: 'i' } },
+                        { category: { $regex: keyword, $options: 'i' } },
+                    ],
+                },
+                { status: 'approved' }, // Additional condition for approved books
+            ],
+        });
+        res.status(200).json(books);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  };
+};
+
 
   // Controller for getting the average rating of a book by title
   exports.getAverageRating = async (req, res) => {

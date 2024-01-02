@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Footer from "../../Components/footer/Footer"
 import Navbar from "../../Components/navbar/Navbar"
 import axios from 'axios';
+import { Cancel, PermMedia } from '@material-ui/icons';
 import "./addBook.css"
 
 const AddBook = () => {
@@ -12,14 +13,14 @@ const AddBook = () => {
         category: '',
         language: '',
         publishedDate: '',
-        coverImage: null,
+        cover: null,
     });
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: name === 'coverImage' ? files[0] : value,
+            [name]: name === 'cover' ? files[0] : value,
         }));
     };
 
@@ -50,7 +51,7 @@ const AddBook = () => {
                 category: '',
                 language: '',
                 publishedDate: '',
-                coverImage: null,
+                cover: null,
             });
 
             console.log("book added succefully")
@@ -109,9 +110,18 @@ const AddBook = () => {
                     </select>
                 </label>
                 <label>
-                    Cover Image:
-                    <input className='fileInput' type="file" name="coverImage" onChange={handleChange} accept="image/*" />
+                    Cover Image: <PermMedia style={{cursor:'pointer'}}/>
+                    <input style={{display:'none'}} className='fileInput' type="file" name="cover" onChange={handleChange} accept="image/*" />
                 </label>
+                {formData.cover && (
+                    <div className="fileImgContainer">
+                        <img className='fileImg' src={URL.createObjectURL(formData.cover)} alt="" />
+                        <Cancel style={{cursor:'pointer'}} className='fileImgCancel' onClick={()=>setFormData((prevData) => ({
+                            ...prevData,
+                            cover:null
+                            }))}/>
+                    </div>
+                )}
                 <label>
                     Language:
                     <input className='bookInput' type="text" name="language" value={formData.language} onChange={handleChange} />

@@ -36,24 +36,23 @@ const Recherche = () => {
   return (
     <div>
       <Navbar />
-      <Dropdown id="dropdown" />
       <h2 className="title">Results of {location.pathname.split('/search/')[1]}</h2>
       <div className='bookContainer'>
         <div className="categorie">
             <div className="books">
-            {searchResults.map((book) => (
-            <Link className='bookLink' key={book._id} to={`/books/${book._id}`}>
-                <Book
-                    title={book.title}
-                    author={book.author}
-                    rating={book.averageRating}
-                    cover={book.cover}
-                />
-            </Link>
-            ))}
+              {searchResults.map((book) => (
+              <Link className='bookLink' key={book._id} to={`/books/${book._id}`}>
+                  <Book
+                      title={book.title}
+                      author={book.author}
+                      rating={book.averageRating}
+                      cover={book.cover}
+                  />
+              </Link>
+              ))}
+            </div>
         </div>
       </div>
-    </div>
       <Footer />
     </div>
   );
