@@ -4,15 +4,13 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/UserRouter');
 const BookRouter = require('./routes/BookRouter');
-const messageRouter = require('./routes/ChatRouter'); 
-const initializeRealtimeMessaging = require('./realtimeMessaging'); // Importer le module de messagerie
 const upload = require('./utility/multerConfig');
-const path = require('path')
+const path = require('path');
+const ChatMessage = require('./models/ChatMessage'); // Import the ChatMessage model
+const socketIO = require('socket.io');
+const cors = require('cors'); // Import the cors middleware
 
 const app = express();
-var cors = require('cors')
-app.use(cors())
-const PORT = process.env.PORT || 5000;
 const server = http.createServer(app); // Create an HTTP server
 
 // Middleware
@@ -31,18 +29,74 @@ mongoose.connection.on('error', (err) => {
   console.error(`MongoDB connection error: ${err}`);
 });
 
-// Initialize WebSocket server and set it in the app
-const io = initializeRealtimeMessaging(server);
-app.set('socketio', io);
+const io = socketIO(server, {
+  cors: {
+    origin: 'http://localhost:3000', // Replace with your frontend URL
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
+// Inside your server-side code (app.js or server.js)
+
+const userSockets = {}; // Map to store user IDs and their corresponding sockets
+
+// Socket.IO server logic
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Handle user login event
+  socket.on('login', (userId) => {
+    userSockets[userId] = socket;
+    console.log(`User ${userId} logged in`);
+  });
+
+  // Handle joinCategory event
+  socket.on('joinCategory', (data) => {
+    const { userId, category } = data;
+    console.log(`User ${userId} joined category: ${category}`);
+    socket.join(category);
+  });
+
+  // Handle sendMessage event
+  socket.on('sendMessage', (message) => {
+    console.log(`Received message: ${message.text} from ${message.user} in category ${message.category}`);
+    
+    // Save the message to MongoDB or perform any other desired logic
+    // Here, we're using the user ID to send the message to the correct socket
+    const userSocket = userSockets[message.userId];
+    if (userSocket) {
+      userSocket.emit('receiveMessage', message);
+    }
+  
+    // Broadcast the message to all users in the category room
+    io.to(message.category).emit('receiveMessage', message);
+  });
+
+  // Handle disconnect event
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+    
+    // Remove the socket association when a user disconnects
+    const userIdToRemove = Object.keys(userSockets).find(
+      (key) => userSockets[key] === socket
+    );
+    if (userIdToRemove) {
+      delete userSockets[userIdToRemove];
+      console.log(`Removed socket association for user ${userIdToRemove}`);
+    }
+  });
+});
+
 
 // Routes
+app.use(cors()); // Enable CORS for all routes
 app.use('/users', userRouter);
 app.use('/books', BookRouter);
-app.use('/messages', messageRouter);
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 // Start server
 server.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

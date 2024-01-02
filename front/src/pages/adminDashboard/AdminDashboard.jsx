@@ -28,13 +28,13 @@ const AdminDashboard = () => {
     };
 
     fetchPendingRequests();
-  }, []); // Run the effect only once when the component mounts
+  }, [token]); // Run the effect only once when the component mounts
 
   return (
     <div className='adminDashboard'>
       <Navbar />
 
-        <h2 className='title'>Pending Books</h2>
+        <h2 className='titleAdmin'>Pending Books</h2>
 
       <div className='bookContainer'>
         <div className="categorie">

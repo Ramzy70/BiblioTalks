@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Footer from '../../Components/footer/Footer';
-import Dropdown from '../../Components/dropdownMenu/Dropdown';
 import Navbar from '../../Components/navbar/Navbar.jsx';
 import './recherche.css';
 import { Link } from 'react-router-dom';
@@ -31,7 +30,7 @@ const Recherche = () => {
             console.error('Error fetching search results:', error);
           });
     }
-  }, [location.pathname]);
+  }, [token,location.pathname]);
 
   return (
     <div>

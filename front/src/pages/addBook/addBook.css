@@ -23,8 +23,38 @@
     font-size:x-large;
     justify-content: space-between;
 }
+.addBookForm label select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 20px;
+    min-height: 66.5px;
+    border-radius: 10px;
+    border: 2px solid #909090;
+    font-size: 15px;
+    font-weight: 500;
+    width: 40%;
+    background-color: white;
+    color: black;
+ }
+ .addBookForm label select:focus{
+    border-color: black;
+    outline: none;
+}
+.dateInput { 
+    padding: 10px; 
+    height: 66.5px;
+    border: 2px solid #909090;
+    border-radius: 10px;
+}
+.dateInput:focus { 
+    border-color: black;
+    outline: none;
+}
+ ::-webkit-datetime-edit {
+    border: none;
+}
 .submitBtn {
-    font-style: 30px;
     padding: 10px;
     border-radius: 10px;
     border: none;
@@ -40,7 +70,12 @@
     border: 2px solid #909090;
     font-size: 15px;
     color: black;
+    font-weight: 500;
     width: 40%;
+}
+.bookInput:focus {
+    border-color: black;
+    outline: none;
 }
 
 .fileInput {

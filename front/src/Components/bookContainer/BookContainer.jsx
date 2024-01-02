@@ -4,7 +4,7 @@ import Book from "../Book/Book.jsx"
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-export default function BookContainer({title , category , orderType , pageCategory , list}) {
+export default function BookContainer({thisBook , title , category , orderType , pageCategory , list}) {
 
     const [books, setBooks] = useState([]);
     const token = localStorage.getItem('token');
@@ -38,7 +38,7 @@ export default function BookContainer({title , category , orderType , pageCatego
                 console.log("")
               )
         }
-
+        response.data = response.data.filter((b) => b._id !== thisBook);
         const averageRatingsPromises = response.data.map(async (book) => {
             const averageRatingResponse = await axios.get(`http://localhost:5000/users/${book._id}/average-rating`, {
               headers: {
@@ -106,14 +106,14 @@ export default function BookContainer({title , category , orderType , pageCatego
     }
     list && fetchListBooks();
     !list && fetchBooks();
-  }, [token , orderType , category , list ]);   
+  }, [token , orderType , category , list , thisBook]);   
   
 
   return (
     <div className='bookContainer'>
 
         <div className="categorie">
-            <h2 className="title">{title}</h2>
+            {title && <h2 className="title">{title}</h2>}
             <div className="books">
             {books.map((book) => (
             <Link className='bookLink' key={book._id} to={`/books/${book._id}`}>

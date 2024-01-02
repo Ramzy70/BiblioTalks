@@ -53,7 +53,7 @@ const BookPage = () => {
       {!book ? <p>Loading...</p> : 
         <BookReview key={book._id} book={book}/>
       }
-      <BookContainer title="Similar" category={book?.category}/>
+      <BookContainer thisBook={bookId} title="Similar" category={book?.category}/>
       <Footer/>
     </div>
   )

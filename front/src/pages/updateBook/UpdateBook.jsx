@@ -119,7 +119,7 @@ const UpdateBook = () => {
   };
 
   return (
-    <div>
+    <div className='AddBook'>
       <Navbar />
       <div className="updateBookContainer">
         <h1 className="pageTitle">Update Book</h1>
@@ -194,10 +194,10 @@ const UpdateBook = () => {
           </button>
         </form>
         <div className="approvalButtons">
-          <button className="approveBtn" onClick={() => handleApproval('approve')}>
+          <button className="approveBtn submitBtn" onClick={() => handleApproval('approve')}>
             Approve
           </button>
-          <button className="rejectBtn" onClick={() => handleApproval('reject')}>
+          <button className="rejectBtn submitBtn" onClick={() => handleApproval('reject')}>
             Reject
           </button>
         </div>

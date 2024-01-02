@@ -13,7 +13,7 @@ import categories from "../../utility/categories.json"
 const Navbar = () => {
 
     const [showLinks, setShowLinks] = useState(false)
-    const [showSearch, setShowSearch] = useState(true)
+    const [showSearch] = useState(true)
     const [showProfile, setShowProfile] = useState(false)
     const  {user, dispatch } = useContext(AuthContext)
 
@@ -100,7 +100,7 @@ const Navbar = () => {
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <button type="submit" style={{ backgroundColor: 'none' , border:'none'}}>
+            <button type="submit" style={{ backgroundColor: 'none' , border:'none' , width:'0px' , height:'0px' , padding:'0px'}}>
                 <SearchIcon className="searchIcon" />
             </button>
         </form>

@@ -1,22 +1,44 @@
-import React, { useState, useRef , useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import SendIcon from '@mui/icons-material/Send';
-
 import './livechat.css';
 
-const Chat = () => {
+const LiveChat = ({ socket, category, user }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
   const sendMessage = () => {
-    setMessages([...messages, { text: newMessage, user: 'You' }]);
-    setNewMessage('');
+    if (newMessage.trim() !== '') {
+      // Emit a 'sendMessage' event to the server with the message and category
+      socket.emit('sendMessage', { text: newMessage, user: 'You', category, userId: user._id });
+      setNewMessage('');
+    }
   };
-  
+
   const divRef = useRef();
+
   useEffect(() => {
+    // Join the category room when the component mounts
+    socket.emit('joinCategory', category);
+
+    // Listen for incoming messages and update the state
+    socket.on('receiveMessage', (message) => {
+      setMessages([...messages, message]);
+    });
+
+    // Listen for initial message history and update the state
+    socket.on('messageHistory', (messageHistory) => {
+      setMessages(messageHistory);
+    });
+
+    // Scroll to the bottom of the chat when messages change
     divRef.current.scrollTop = divRef.current.scrollHeight;
-  }, [messages]);
-  
+
+    // Cleanup socket event listeners when the component unmounts
+    return () => {
+      socket.off('receiveMessage');
+      socket.off('messageHistory');
+    };
+  }, [socket, category, messages]);
 
   return (
     <div className="chat-container">
@@ -48,4 +70,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default LiveChat;

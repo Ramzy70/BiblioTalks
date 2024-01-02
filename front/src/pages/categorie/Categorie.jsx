@@ -1,45 +1,73 @@
-import React from 'react'
-import "./categorie.css"
-import Navbar from "../../Components/navbar/Navbar"
-import LiveChat from "../../Components/livechat/Livechat"
-import BookContainer from "../../Components/bookContainer/BookContainer.jsx";
-import Footer from "../../Components/footer/Footer"
-import categories from '../../utility/categories.json'
+import React, { useState, useEffect, useContext } from 'react';
+import './categorie.css';
+import Navbar from '../../Components/navbar/Navbar';
+import LiveChat from '../../Components/livechat/Livechat';
+import BookContainer from '../../Components/bookContainer/BookContainer.jsx';
+import Footer from '../../Components/footer/Footer';
+import categories from '../../utility/categories.json';
 import { useParams } from 'react-router-dom';
+import io from 'socket.io-client';
+import { AuthContext } from '../../context/AuthContext.js';
 
-const Category = ({ match }) => {
 
+const Category = () => {
   const { category: categoryName } = useParams();
   const category = categories.find((c) => c.name === categoryName);
 
+  const [socket, setSocket] = useState(null);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!user || !category) {
+      console.log('User or category not available:', user, category);
+      return; // Do nothing if user or category is not available yet
+    }
+
+    const newSocket = io('http://localhost:5000');
+
+    newSocket.on('connect', () => {
+      console.log('Socket connected');
+      // Emit a 'login' event with the user ID after the socket is connected
+      newSocket.emit('login', user._id);
+      console.log('User logged in:', user);
+      // Join the category room after logging in
+      newSocket.emit('joinCategory', { userId: user._id, category: categoryName });
+      console.log(`User joined category: ${categoryName}`);
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+      console.log('Socket disconnected');
+    };
+  }, [user, categoryName, category]);
 
   return (
-    
     <div>
-      <Navbar/>
-      {category ?
+      <Navbar />
+      {category ? (
         <>
-          <div className='topCategoryPage' >
-          <div className="categoryInfo">
-            <h1 className="categoryName">{category.name}</h1>
-            <h3>{category.description}</h3>
+          <div className="topCategoryPage">
+            <div className="categoryInfo">
+              <h1 className="categoryName">{category.name}</h1>
+              <h3>{category.description}</h3>
+            </div>
+            <div className="chat">
+              <h4 className="livechatTitle">Communicate and Discuss about this category !</h4>
+              {socket && <LiveChat socket={socket} category={categoryName} user={user} />}
+            </div>
           </div>
-          <div className="chat">
-            <h4 className="livechatTitle">Communicate and Discuss about this category !</h4>
-            <LiveChat/>
-          </div>
-        </div>
-        <h1 className="booksTitle">Explore Books From This Category</h1>
-        <BookContainer category={categoryName} pageCategory={true}/>
+          <h1 className="booksTitle">Explore Books From This Category</h1>
+          <BookContainer category={categoryName} pageCategory={true} />
         </>
-          :
-          <h2 className='noCategoryFound'>There is no such a Category with the Name of : {categoryName}</h2>
-          }
-      <Footer/>
+      ) : (
+        <h2 className="noCategoryFound">There is no such a Category with the Name of : {categoryName}</h2>
+      )}
+      <Footer />
     </div>
+  );
+};
 
-  )
-  
-}
+export default Category;
 
-export default Category

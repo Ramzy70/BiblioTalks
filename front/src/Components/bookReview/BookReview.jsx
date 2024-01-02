@@ -1,4 +1,4 @@
-import React ,{useEffect,useState} from 'react'
+import React ,{useState} from 'react'
 import "./bookReview.css"
 import {FaStar} from "react-icons/fa"
 import axios from 'axios';
@@ -23,7 +23,7 @@ const BookReview = ({book}) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:5000/users/${book._id}/rating-comment`,
         { rating, comment },
         {

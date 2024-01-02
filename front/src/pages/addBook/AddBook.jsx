@@ -128,7 +128,7 @@ const AddBook = () => {
                 </label>
                 <label>
                     Published Date:
-                    <input type="date" name="publishedDate" value={formData.publishedDate} onChange={handleChange} />
+                    <input className='dateInput' type="date" name="publishedDate" value={formData.publishedDate} onChange={handleChange} />
                 </label>
                 <button className="submitBtn" type="submit">Add Book</button>
             </form>
