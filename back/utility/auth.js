@@ -28,7 +28,6 @@ function authenticateMiddleware(req, res, next) {
 
 const authAdminMiddleware = (req, res, next) => {
   const user = req.user;
-console.log(user);
   if (!user || !user.isSuperUser) {
     return res.status(403).json({ error: 'Forbidden - Admin access required' });
   }

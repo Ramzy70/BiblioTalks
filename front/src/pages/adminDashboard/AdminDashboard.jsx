@@ -33,9 +33,7 @@ const AdminDashboard = () => {
   return (
     <div className='adminDashboard'>
       <Navbar />
-
-        <h2 className='titleAdmin'>Pending Books</h2>
-
+      <h2 className='titleAdmin'>Pending Books</h2>
       <div className='bookContainer'>
         <div className="categorie">
           <div className="books">

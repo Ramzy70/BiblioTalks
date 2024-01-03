@@ -43,27 +43,21 @@ const userSockets = {}; // Map to store user IDs and their corresponding sockets
 
 // Socket.IO server logic
 io.on('connection', (socket) => {
-  console.log('A user connected');
 
   // Handle user login event
   socket.on('login', (userId) => {
     userSockets[userId] = socket;
-    console.log(`User ${userId} logged in`);
   });
 
   // Handle joinCategory event
   socket.on('joinCategory', (data) => {
     const { userId, category } = data;
-    console.log(`Received joinCategory request: User ${userId} trying to join category: ${category}`);
     socket.join(category);
-    console.log(`User ${userId} successfully joined category: ${category}`);
   });
 
   // Handle sendMessage event
   // Handle sendMessage event
   socket.on('sendMessage', async (message) => {
-  console.log(`Received message: ${message.text} from ${message.user} in category ${message.category}`);
-
   // Save the message to MongoDB
   try {
     const newMessage = new ChatMessage({
@@ -89,22 +83,18 @@ io.on('connection', (socket) => {
 
   // Handle disconnect event
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
-    
     // Remove the socket association when a user disconnects
     const userIdToRemove = Object.keys(userSockets).find(
       (key) => userSockets[key] === socket
     );
     if (userIdToRemove) {
       delete userSockets[userIdToRemove];
-      console.log(`Removed socket association for user ${userIdToRemove}`);
     }
   });
 
   // Handle requestMessageHistory event
   // Handle requestMessageHistory event
   socket.on('requestMessageHistory', async (category, callback) => {
-    console.log(`User requested message history for category: ${category}`);
     try {
       const messages = await ChatMessage.find({ category })
         .sort({ timestamp: 'asc' })

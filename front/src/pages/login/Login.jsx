@@ -35,7 +35,7 @@ const loginCall = async (userCredentials,dispatch) => {
         <div className="loginLeft">
           <h3 className="loginLogo">BibioTalks</h3>
           <span className="loginDesc">
-            Connect with friends and the world around you on SocialMedia.
+            Read about Books and Connect with friends and the world around you on BiblioTalks.
           </span>
         </div>
         <div className="loginRight">
