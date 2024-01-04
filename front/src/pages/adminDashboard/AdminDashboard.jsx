@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import Footer from "../../Components/footer/Footer";
 import Navbar from "../../Components/navbar/Navbar";
 import axios from 'axios';
-import Book from '../../Components/Book/Book'; // Make sure to provide the correct path
-
+import Book from '../../Components/Book/Book'; 
 import './adminDashboard.css';
 
 const AdminDashboard = () => {

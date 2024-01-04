@@ -115,6 +115,9 @@ const Navbar = () => {
                     <Link to={`/profile/${user._id}`} style={{textDecoration:"none"}}>Profile Page</Link>
                 </li>
                 <li>
+                    <Link to={`/profileSettings/${user._id}`} style={{textDecoration:"none"}}>Profile Settings</Link>
+                </li>
+                <li>
                     <form onSubmit={logoutClick}><button>Log Out</button></form>
                 </li>
             </ul>

@@ -11,6 +11,7 @@ import Recherche from "./pages/recherche/Recherche";
 import AddBook from "./pages/addBook/AddBook";
 import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
 import UpdateBook from "./pages/updateBook/UpdateBook";
+import ProfileSettings from "./pages/profileSettings/ProfileSettings";
 import { AuthContext } from "./context/AuthContext";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path='/register'  element={user ? <Navigate  to="/"/> : <Register/>}/>
             <Route path='/books/:bookId' element={user ? <BookPage/> : <Navigate  to="/"/> }  />
             <Route path='/profile/:profile' element={user ? <Profile/> : <Navigate  to="/"/> }/>
+            <Route path='/profileSettings/:profile' element={user ? <ProfileSettings/> : <Navigate  to="/"/> }/>
             <Route path='/category/:category' element={user ? <Categorie/> : <Navigate  to="/"/> }/>
             <Route path='/search/:keyboard' element={user ? <Recherche/> : <Navigate  to="/"/> }/>
             <Route path='/addBook' element={user ? <AddBook/> : <Navigate  to="/"/> }/>

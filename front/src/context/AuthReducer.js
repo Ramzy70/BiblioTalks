@@ -40,6 +40,38 @@ const AuthReducer = (state,action) => {
                     wishList:state.user.wishList.filter(bookItem=> bookItem !== action.payload)
                 }
             }
+        case "READ":
+            return{
+                ...state,
+                user:{
+                    ...state.user,
+                    alreadyRead:[...state.user.alreadyRead,action.payload]
+                }
+            }
+        case "UNREAD":
+            return{
+                ...state,
+                user:{
+                    ...state.user,
+                    alreadyRead:state.user.alreadyRead.filter(bookItem=> bookItem !== action.payload)
+                }
+            }
+        case "READING":
+            return{
+                ...state,
+                user:{
+                    ...state.user,
+                    haveBeenRead:[...state.user.haveBeenRead,action.payload]
+                }
+            }
+        case "UNREADING":
+            return{
+                ...state,
+                user:{
+                    ...state.user,
+                    haveBeenRead:state.user.haveBeenRead.filter(bookItem=> bookItem !== action.payload)
+                }
+            }
         default:
             return state
     }

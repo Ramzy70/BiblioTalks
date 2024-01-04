@@ -17,8 +17,8 @@ const Home = () => {
       <BookContainer title="Top rated" orderType="top-rated"/>
       <BookContainer title="Popular Now" orderType="popular"/>
       <BookContainer title="New" orderType="new"/>
-      <BookContainer title="Mystery" category="Mystery"/>
       <BookContainer title="Science Fiction & Fantasy" category="Science Fiction & Fantasy"/>
+      <BookContainer title="Mystery" category="Mystery"/>
       <Footer/>
     </div>
   )

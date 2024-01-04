@@ -20,7 +20,7 @@ router.post('/register', userController.registerUser);
 //lists
 router.post('/wishlist/:bookId', authenticateMiddleware, userController.addToWishlist); //plane to read
 router.delete('/wishlist/:bookId', authenticateMiddleware, userController.removeFromWishlist);
-router.post('/alreadyread/:bookId', authenticateMiddleware, userController.addToAlreadyRead); // Completed
+router.post('/alreadyread/:bookId', authenticateMiddleware, userController.addToAlreadyRead); // read
 router.delete('/alreadyread/:bookId', authenticateMiddleware, userController.removeFromAlreadyRead);
 router.post('/reading/:bookId', authenticateMiddleware, userController.addToHaveBeenRead); //reading
 router.delete('/reading/:bookId', authenticateMiddleware, userController.removeFromHaveBeenRead);

@@ -62,13 +62,25 @@
     background-color: white;
     border: 2px solid #3498DB;
 }
+
+.modifyBtn {
+    margin-top: 20px;
+    max-width: fit-content;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 0);
+    color: rgb(54, 51, 5);
+    font-weight: 700;
+    
+}
 @media only screen and (max-width:940px) {
     .bookInfo {
         flex-direction: column;
         justify-content: center;
         margin-top: 140px;
     }
-    .bookInfoName , .bookInfoDesc , .ratingStars {
+    
+    .bookInfoName , .bookInfoDesc , .ratingStars , .modifyBtn {
         align-self: center;
     }
     .bookInfoRight {
@@ -92,8 +104,9 @@
         width: fit-content;
         align-self: center;
     }
-}
-@media only screen and (max-width:670px) {
+    .modifyBtn {
+        margin-top: 0px;
+    }
     .bookInfoImg {
         width: 250px;
     }

@@ -196,8 +196,6 @@ exports.addToWishlist = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-    
   // Controller for removing a book from the user's wishlist
   exports.removeFromWishlist = async (req, res) => {
     const userId = req.user.id;
@@ -255,7 +253,6 @@ exports.addToWishlist = async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
-  
   // Controller for adding a book to the "Have Been Read" list
   exports.addToHaveBeenRead = async (req, res) => {
     const userId = req.user.id;
@@ -308,7 +305,6 @@ exports.addToWishlist = async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
-  
   // Controller for removing a book from the "Have Been Read" list
   exports.removeFromHaveBeenRead = async (req, res) => {
     const userId = req.user.id;
