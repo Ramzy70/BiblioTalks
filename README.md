@@ -1,7 +1,7 @@
-#BiblioTalks - MERN Web App
+# BiblioTalks - MERN Web App
 BiblioTalks is a MERN (MongoDB, Express.js, React.js, Node.js) web application that allows users to discover and discuss books in real-time chat rooms. This README provides information on how to set up the development environment and outlines the features available for users and administrators.
 
-##Table of Contents
+## Table of Contents
 Features
 Prerequisites
 Installation
@@ -9,7 +9,7 @@ Usage
 User Features
 Admin Features
 
-###Features
+### Features
 
 Real-time chat rooms categorized by book genres.
 User authentication and authorization.
@@ -20,14 +20,14 @@ Add new books as a user, and wait for the admin approval.
 Add reviews to the books, with a score from 1 to 5 and comments.
 
 
-###Prerequisites
+### Prerequisites
 Before you begin, ensure you have met the following requirements:
 
 Node.js installed.
 MongoDB installed and running.
 Git installed.
 
-###Installation
+### Installation
 Clone the repository:
 git clone https://github.com/Ramzy70/BiblioTalks.git
 
@@ -46,7 +46,7 @@ cd ../front
 Install client dependencies:
 npm install
 
-###Usage
+### Usage
 
 Start the server:
 cd back
@@ -58,7 +58,7 @@ npm start
 
 Open your browser and visit http://localhost:3000 to access the web application.
 
-###User Features
+### User Features
 
 Real-Time Chat: Engage in real-time conversations with other users in chat rooms based on book genres.
 Wish List: Add books to your wish list for future reading.
@@ -66,7 +66,7 @@ Reading Progress: Mark books as read or currently being read.
 Reviews: Score and add review to any book you want.
 Submit a Book request: add a book with its infos and wait for its approval.
 
-###Admin Features
+### Admin Features
 
 Admin Dashboard: Access to an admin dashboard for managing Pending Books that are waiting for approval.
 Book Management: Modify any book with the ability to Remove it completely.
